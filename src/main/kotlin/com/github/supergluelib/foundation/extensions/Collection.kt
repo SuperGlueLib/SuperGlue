@@ -13,3 +13,9 @@ fun Array<out Any>.sublist(begin: Int, end: Int = size) = Array(end-begin) { thi
 
 /** Fluent method to convert a map to a hashmap */
 fun <K, V> Map<K, V>.toHashMap() = HashMap(this)
+
+/**
+ * Acts the same as [Collection.filter] but allows the result to be null,
+ * the returned list only contains values which returned true, not false or null
+ */
+fun <T> Iterable<T>.filterTrue(predicate: (T) -> Boolean?) = filter { predicate.invoke(it) == true }
