@@ -1,6 +1,7 @@
 package com.github.supergluelib.foundation.extensions
 
 import org.bukkit.Location
+import org.bukkit.Particle
 import org.bukkit.inventory.ItemStack
 
 /** Get the top-center of the block represented by this location */
@@ -15,3 +16,6 @@ fun Location.subtract(x: Int, y: Int, z: Int) = subtract(x.toDouble(), y.toDoubl
 /** Drops an item at the given location */
 fun Location.dropItem(item: ItemStack) = world?.dropItem(this, item)
 
+/** Spawns a particle at this location that everyone can see */
+fun Location.spawnParticle(particle: Particle, count: Int, offsetAllAxes: Double = 0.0, extra: Double = 0.0, data: Any? = null) = world
+    ?.spawnParticle(particle, this, count, offsetAllAxes, offsetAllAxes, offsetAllAxes, extra, data)
