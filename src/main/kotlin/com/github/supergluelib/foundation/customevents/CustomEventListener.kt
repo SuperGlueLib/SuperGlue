@@ -1,5 +1,6 @@
 package com.github.supergluelib.foundation.customevents
 
+import com.github.supergluelib.foundation.Foundations
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -11,12 +12,13 @@ import org.bukkit.plugin.java.JavaPlugin
  */
 object CustomEventListener: Listener {
 
-    internal fun setup(plugin: JavaPlugin) {
-        Bukkit.getPluginManager().registerEvents(this, plugin)
+    fun Foundations.withCustomEvents(): Foundations {
+        setup(plugin)
+        return Foundations
     }
 
-    fun disable() {
-        // TODO unregister events
+    internal fun setup(plugin: JavaPlugin) {
+        Bukkit.getPluginManager().registerEvents(this, plugin)
     }
 
     @EventHandler

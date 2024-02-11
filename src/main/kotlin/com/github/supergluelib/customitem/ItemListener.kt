@@ -16,8 +16,8 @@ internal class ItemListener: Listener {
 
     @EventHandler(ignoreCancelled = true)
     fun onInteract(event: PlayerInteractEvent) {
-        val item = event.item ?: return
-        val customItem = SuperItems.fromItemStack(item)
+        val item = event.item
+        val customItem = item?.let { SuperItems.fromItemStack(it) }
         val player = event.player
         val block = event.clickedBlock
         if (customItem != null) {
@@ -41,7 +41,6 @@ internal class ItemListener: Listener {
                 else -> {}
             }
         }
-
         if (block == null) return
         val customBlock = SuperItems.getCustomBlock(block) ?: return
         customBlock.callCustomBlockInteract(event)

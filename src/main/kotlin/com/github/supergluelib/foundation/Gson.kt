@@ -1,5 +1,6 @@
 package com.github.supergluelib.foundation
 
+import com.github.supergluelib.foundation.extensions.toHashMap
 import com.github.supergluelib.foundation.misc.BlockPos
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -13,6 +14,7 @@ import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.World
 import org.bukkit.enchantments.Enchantment
+import java.lang.reflect.Type
 
 @RequiresOptIn("This Gson adapter is new and may be susecptible to bugs and errors, please report any issues you find", RequiresOptIn.Level.WARNING)
 @Retention(AnnotationRetention.BINARY)
@@ -105,8 +107,9 @@ class NamespacedKeyGsonAdapter(): CustomAdapter<NamespacedKey>() {
 }
 
 class MapGsonAdapter<K, V>(val keyClass: Class<K>, val valueClass: Class<V>, val adapterGson: Gson = Gson()): CustomAdapter<Map<K, V>>() {
+    private val type = object: TypeToken<Map<K, V>>() {}.rawType
     // [ ["key", "value"], ["key", "value"] ]
-    override fun register(gson: GsonBuilder): GsonBuilder = gson.registerTypeHierarchyAdapter(Map::class.java, this)
+    override fun register(gson: GsonBuilder): GsonBuilder = gson.registerTypeHierarchyAdapter(type, this)
 
     override fun writeOut(value: Map<K, V>, writer: JsonWriter) {
         writer.beginArray()
@@ -125,13 +128,68 @@ class MapGsonAdapter<K, V>(val keyClass: Class<K>, val valueClass: Class<V>, val
         reader.beginArray()
         while (reader.peek() == JsonToken.BEGIN_ARRAY) {
             reader.beginArray()
+            // TODO Need to find a way to de-stringify this string
             val key = adapterGson.fromJson(reader.nextString(), keyClass)
+            println(key)
             val value = adapterGson.fromJson(reader.nextString(), valueClass)
             reader.endArray()
             entries.add(key to value)
         }
         reader.endArray()
-        return entries.toMap()
+        return entries.toMap().toHashMap()
+    }
+}
+
+class NestedMapGsonAdapter<K, V, O>(val firstKeyType: Class<K>, val secondKeyType: Class<V>, val valType: Type, val adapterGson: Gson): CustomAdapter<Map<K, Map<V, O>>>() {
+    /*
+        [
+             { "K": [ [ "V", "O" ], [ "V", "O" ] ] },
+             { "K": [ [ "V", "O" ], [ "V", "O" ] ] }
+         ]
+
+     */
+    private val type = object: TypeToken<Map<K, Map<V, O>>>() {}.rawType
+    override fun register(gson: GsonBuilder) = gson.registerTypeHierarchyAdapter(type, this)
+
+    override fun writeOut(value: Map<K, Map<V, O>>, writer: JsonWriter) {
+        writer.beginArray()
+        for (fullEntry in value.entries) {
+            writer.beginObject()
+            writer.name(adapterGson.toJson(fullEntry.key, firstKeyType))
+            writer.beginArray()
+            for (nestedEntry in fullEntry.value.entries) {
+                writer.beginArray()
+                writer.value(adapterGson.toJson(nestedEntry.key, secondKeyType))
+                writer.value(adapterGson.toJson(nestedEntry.value, valType))
+                writer.endArray()
+            }
+            writer.endArray()
+            writer.endObject()
+        }
+        writer.endArray()
+    }
+
+    override fun readIn(reader: JsonReader): Map<K, Map<V, O>> {
+        val entries = mutableListOf<Pair<K, Map<V, O>>>()
+        reader.beginArray()
+        while (reader.peek() == JsonToken.BEGIN_OBJECT) {
+            reader.beginObject()
+            val key = adapterGson.fromJson(reader.nextName(), firstKeyType)
+            reader.beginArray()
+            val nestedEntries = mutableListOf<Pair<V, O>>()
+            while (reader.peek() == JsonToken.BEGIN_ARRAY) {
+                reader.beginArray()
+                val nestedKey = adapterGson.fromJson(reader.nextString(), secondKeyType)
+                val nestedValue = adapterGson.fromJson<O>(reader.nextString(), valType)
+                reader.endArray()
+                nestedEntries.add(nestedKey to nestedValue)
+            }
+            reader.endArray()
+            reader.endObject()
+            entries.add(key to nestedEntries.toMap().toHashMap())
+        }
+        reader.endArray()
+        return entries.toMap().toHashMap()
     }
 }
 

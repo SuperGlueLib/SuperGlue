@@ -1,7 +1,6 @@
 package com.github.supergluelib.foundation
 
 import com.github.supergluelib.customitem.SuperItems
-import com.github.supergluelib.foundation.customevents.CustomEventListener
 import com.github.supergluelib.foundation.extensions.register
 import com.github.supergluelib.foundation.input.InputListener
 import com.github.supergluelib.foundation.misc.PluginMessager
@@ -19,7 +18,6 @@ object Foundations {
     }
 
     private var usingPluginMessaging: Boolean = false
-    private var usingCustomEvents: Boolean = false
 
     fun setup(plugin: JavaPlugin): Foundations {
         this._plugin = plugin
@@ -27,11 +25,6 @@ object Foundations {
         SuperItems.setup(plugin)
         GUIManager.setup(plugin)
         return this
-    }
-
-    fun useCustomEvents(use: Boolean = true) {
-        usingCustomEvents = use
-        if (use) CustomEventListener.setup(plugin)
     }
 
     fun usePluginMessaging(use: Boolean = true) {

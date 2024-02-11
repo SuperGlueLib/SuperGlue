@@ -15,6 +15,7 @@ import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import java.io.File
+import java.lang.reflect.Type
 
 /**
  * Represents a custom block, placeable in the world.
@@ -23,19 +24,18 @@ import java.io.File
  *
  * @param blockDataClass The class of data associated with each block to be saved
  */
-abstract class CustomBlock<T>(val blockDataClass: Class<T>, val defaultData: () -> T): CustomItem() {
+abstract class CustomBlock<T>(val blockDataClass: Type, val defaultData: () -> T): CustomItem() {
     final override fun onRightClickBlock(player: Player, block: Block, item: ItemStack, event: PlayerInteractEvent) {} // Prevent overriding conflicting method
     final override fun getItem() = getItem(defaultData.invoke()) // Make sure Item is always supplied with data
     final override fun fromItemStack(item: ItemStack) = this
 
-    private val file = File(Foundations.plugin.dataFolder, "blocks/${this::class.java.name}.json").apply { ensureExists() }
+    private val file = File(Foundations.plugin.dataFolder, "blocks/${this::class.java.simpleName}.json").apply { ensureExists() }
     private val mapType = object: TypeToken<HashMap<String, HashMap<BlockPos, T>>>() {}.rawType
     private val nestedMapType = object: TypeToken<HashMap<BlockPos, T>>() {}.rawType
+    private val blockPosAdapter = Gson().newBuilder().registerCustomTypeAdapter(BlockPosArrayGsonAdapter()).create()
     private val gson = Gson()
         .newBuilder()
-        .registerCustomTypeAdapter(MapGsonAdapter(String::class.java, nestedMapType))
-        .registerCustomTypeAdapter(MapGsonAdapter(BlockPos::class.java, blockDataClass))
-        .registerCustomTypeAdapter(BlockPosArrayGsonAdapter())
+        .registerCustomTypeAdapter(NestedMapGsonAdapter<String, BlockPos, T>(String::class.java, BlockPos::class.java, blockDataClass, blockPosAdapter))
         .create()
 
     private val dataStore: HashMap<String, HashMap<BlockPos, T>> = file.reader().use {
@@ -44,14 +44,15 @@ abstract class CustomBlock<T>(val blockDataClass: Class<T>, val defaultData: () 
 
     class CustomBlockState<T>(val worldName: String, val pos: BlockPos, val data: T) {
         val world get() = Bukkit.getWorld(worldName)
+        val block get() = world?.getBlockAt(pos.x, pos.y, pos.z)
     }
 
     fun getAllBlocks() = dataStore.entries.flatMap { entry ->
         entry.value.map { CustomBlockState<T>(entry.key, it.key, it.value) }
     }
 
-    private fun saveFile(async: Boolean) = Runnables.async(async) {
-        file.writer().use { gson.toJson(dataStore, mapType, it) }
+    fun saveFile(async: Boolean) = Runnables.async(async) {
+        file.writer().use { gson.toJson(dataStore, it) }
     }
 
     // Handler methods for this custom block type

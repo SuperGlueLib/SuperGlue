@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 
 // represents a fast furnace -- Data == speed multiplier
-class CustomBlockImplementation: CustomBlock<Int>(Int::class.java, { 1 } ) {
+class ExampleCustomBlockImplementation: CustomBlock<Int>(Int::class.java, { 1 } ) {
     override fun onPlace(block: Block, item: ItemStack, data: Int, player: Player, event: BlockPlaceEvent) {} // optional
     override fun onRightClickCustomBlock(block: Block, player: Player, data: Int, event: PlayerInteractEvent) {} // optional
     override fun onLeftClickCustomBlock(block: Block, player: Player, data: Int, event: PlayerInteractEvent) {}  // optional
