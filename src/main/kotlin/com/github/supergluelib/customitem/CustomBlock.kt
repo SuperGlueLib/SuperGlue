@@ -45,6 +45,7 @@ abstract class CustomBlock<T>(val blockDataClass: Type, val defaultData: () -> T
     class CustomBlockState<T>(val worldName: String, val pos: BlockPos, val data: T) {
         val world get() = Bukkit.getWorld(worldName)
         val block get() = world?.getBlockAt(pos.x, pos.y, pos.z)
+        val isLoaded get() = world?.let { pos.isLoaded(it) } == true
     }
 
     fun getAllBlocks() = dataStore.entries.flatMap { entry ->
