@@ -70,9 +70,9 @@ internal class ItemListener: Listener {
 
     @EventHandler(ignoreCancelled = true)
     fun onBreakBlock(event: BlockBreakEvent) {
-        val item = event.player.inventory.itemInMainHand.takeUnless { it.type.isAir } ?: return
-        val customItem = SuperItems.fromItemStack(item) ?: return
-        customItem.onBreakBlockWith(event.player, event.block, item, event)
+        val item = event.player.inventory.itemInMainHand.takeUnless { it.type.isAir }
+        val customItem = item?.let { SuperItems.fromItemStack(it) }
+        customItem?.onBreakBlockWith(event.player, event.block, item, event)
 
         val customblock = SuperItems.getCustomBlock(event.block)
         if (customblock != null) {
