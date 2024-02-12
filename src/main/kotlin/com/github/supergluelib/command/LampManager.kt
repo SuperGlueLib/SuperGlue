@@ -4,7 +4,6 @@ import com.github.supergluelib.command.annotations.NotFullInventory
 import com.github.supergluelib.command.annotations.NotSelf
 import com.github.supergluelib.foundation.Foundations
 import org.bukkit.entity.Player
-import org.bukkit.plugin.java.JavaPlugin
 import revxrsal.commands.bukkit.BukkitCommandHandler
 import revxrsal.commands.command.CommandActor
 import revxrsal.commands.command.CommandParameter
@@ -17,7 +16,7 @@ object LampManager {
     lateinit var handler: BukkitCommandHandler private set
 
     /**
-     * Get the command handler for your plugin, registered with all of the wrappers extensions.
+     * Get the command handler for your plugin, registered with all the wrapper's extensions.
      * @param handler Your existing command handler if you have one, otherwise creates one for you
      * @return the same [BukkitCommandHandler] (for conciseness)
      */
