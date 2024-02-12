@@ -13,6 +13,6 @@ dependencies {
 }
 ```
 
-You should replace the version "1.0.0" with the [latest version](https://github.com/SuperGlueLib/SuperGlue/releases) of the library.
+You should replace the version "1.0.0" with the [latest version](https://github.com/SuperGlueLib/SuperGlue/releases/latest) of the library.
 
 *More coming soon*
