@@ -14,16 +14,7 @@ object LampManager {
 
     private val plugin get() = Foundations.plugin
 
-    @Deprecated("You no longer need to pass the plugin variable", ReplaceWith("LampManager.create()"))
-    /**
-     * Get the command handler for your plugin, registered with all of the wrappers extensions.
-     * @param handler Your existing command handler if you have one, otherwise creates one for you
-     * @return the same [BukkitCommandHandler] (for conciseness)
-     */
-    fun create(plugin: JavaPlugin, handler: BukkitCommandHandler = BukkitCommandHandler.create(plugin)): BukkitCommandHandler {
-        registerParameterValidators(handler)
-        return handler
-    }
+    lateinit var handler: BukkitCommandHandler private set
 
     /**
      * Get the command handler for your plugin, registered with all of the wrappers extensions.
@@ -31,8 +22,15 @@ object LampManager {
      * @return the same [BukkitCommandHandler] (for conciseness)
      */
     fun create(handler: BukkitCommandHandler = BukkitCommandHandler.create(plugin)): BukkitCommandHandler {
+        this.handler = handler
         registerParameterValidators(handler)
         return handler
+    }
+
+    fun Foundations.registerCommands(vararg commands: Any): Foundations {
+        if (!this@LampManager::handler.isInitialized) create()
+        handler.register(*commands)
+        return this
     }
 
     /**
