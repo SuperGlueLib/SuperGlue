@@ -25,10 +25,10 @@ abstract class CustomItem() {
     class Settings(var canPlace: Boolean = false)
     val settings = Settings()
 
-    abstract fun getItem(): ItemStack
     abstract fun isItem(item: ItemStack, meta: ItemMeta = item.itemMeta!!): Boolean
-    /** This method assumed that [isItem] is true */
+    /** This method assumes that [isItem] is true */
     abstract fun fromItemStack(item: ItemStack): CustomItem
+    abstract fun getItem(): ItemStack
 
     open fun onRightClick(player: Player, item: ItemStack, event: Event) {}
     open fun onLeftClick(player: Player, item: ItemStack, event: Event) {}
