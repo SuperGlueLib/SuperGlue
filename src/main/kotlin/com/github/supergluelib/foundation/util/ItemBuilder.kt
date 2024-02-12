@@ -42,7 +42,8 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
 
     fun name(name: String) = apply { this.name = name; }
     fun lore(lines: List<String>) = apply { this.lore = ArrayList(lines) }
-    fun addLore(vararg line: String) = apply { lore = (lore ?: ArrayList()).apply { addAll(line) } }
+    fun addLores(lines: List<String>) = apply { lore = (lore ?: ArrayList()).apply { addAll(lines) } }
+    fun addLore(vararg line: String) = addLores(line.toList())
     fun addEnchant(enchant: Enchantment, level: Int) = apply { enchants?.put(enchant, level) ?: run { enchants = hashMapOf(enchant to level) } }
     fun enchants(enchants: Map<Enchantment, Int>) = apply { this@ItemBuilder.enchants = enchants.toHashMap() }
     fun hideEnchants(hide: Boolean) = apply { hideEnchants = hide }
