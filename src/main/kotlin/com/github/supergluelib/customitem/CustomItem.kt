@@ -22,6 +22,9 @@ import org.bukkit.inventory.meta.ItemMeta
  */
 abstract class CustomItem() {
 
+    class Settings(var canPlace: Boolean = false)
+    val settings = Settings()
+
     abstract fun getItem(): ItemStack
     abstract fun isItem(item: ItemStack, meta: ItemMeta = item.itemMeta!!): Boolean
     /** This method assumed that [isItem] is true */

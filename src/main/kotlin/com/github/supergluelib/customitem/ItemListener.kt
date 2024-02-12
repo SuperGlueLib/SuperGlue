@@ -1,5 +1,6 @@
 package com.github.supergluelib.customitem
 
+import com.github.supergluelib.foundation.extensions.cancel
 import com.github.supergluelib.foundation.extensions.dropItem
 import com.github.supergluelib.foundation.extensions.toCenter
 import org.bukkit.entity.Player
@@ -85,8 +86,10 @@ internal class ItemListener: Listener {
 
     @EventHandler(ignoreCancelled = true)
     fun onPlaceCustomBlock(event: BlockPlaceEvent) {
-        val customBlock = SuperItems.fromItemStack(event.itemInHand) as? CustomBlock<*> ?: return
-        customBlock.callCustomBlockPlace(event)
+        val customItem = SuperItems.fromItemStack(event.itemInHand) ?: return
+        if (!customItem.settings.canPlace) return event.cancel()
+        if (customItem is CustomBlock<*>)
+            customItem.callCustomBlockPlace(event)
     }
 
 }

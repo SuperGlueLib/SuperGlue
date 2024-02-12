@@ -56,6 +56,10 @@ abstract class CustomBlock<T>(val blockDataClass: Type, val defaultData: () -> T
         file.writer().use { gson.toJson(dataStore, it) }
     }
 
+    init {
+        settings.canPlace = true
+    }
+
     // Handler methods for this custom block type
 
     /** Whether the supplied block represents this custom block */
