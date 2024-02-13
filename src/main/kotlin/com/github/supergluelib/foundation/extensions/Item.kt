@@ -13,7 +13,7 @@ fun ItemStack?.isValid() = (this != null) && !type.isAir
 /** @return true if this itemstack has no special item meta outside of it's material type and amount */
 fun ItemStack.isBasic() = this.isSimilar(ItemStack(type))
 /** @return this itemstack if it is not air, or null if it is */
-fun ItemStack.ifNotAir() = if (type.isAir) null else this
+fun ItemStack.takeIfNotAir() = if (type.isAir) null else this
 
 /** @return true if the localized name of this item exists and is equal to [loc] */
 fun ItemStack.locnameIs(loc: String): Boolean = itemMeta?.localizedName == loc
