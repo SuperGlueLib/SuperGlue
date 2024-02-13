@@ -15,8 +15,9 @@ import org.bukkit.event.player.PlayerInteractEvent
 
 internal class ItemListener: Listener {
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler
     fun onInteract(event: PlayerInteractEvent) {
+        if (event.isCancelled && (event.action != Action.RIGHT_CLICK_AIR && event.action != Action.LEFT_CLICK_AIR)) return
         val item = event.item
         val customItem = item?.let { SuperItems.fromItemStack(it) }
         val player = event.player
