@@ -3,6 +3,7 @@ package com.github.supergluelib.gui
 import com.github.supergluelib.foundation.Foundations
 import com.github.supergluelib.foundation.extensions.clickedTopInventory
 import com.github.supergluelib.foundation.extensions.isValid
+import com.github.supergluelib.foundation.extensions.locnameIs
 import com.github.supergluelib.foundation.extensions.toColor
 import com.github.supergluelib.foundation.misc.PluginMessager.connectToBungeeServer
 import com.github.supergluelib.foundation.util.ItemBuilder
@@ -128,6 +129,7 @@ abstract class GUI {
         }
     }
 
+    protected fun ItemStack.isMenuPane() = locnameIs(Panes.paneLocName)
 
     // Abstract methods
     protected abstract fun generateInventory(): Inventory

@@ -4,8 +4,9 @@ import com.github.supergluelib.foundation.util.ItemBuilder
 import org.bukkit.Material
 
 object Panes {
+    internal const val paneLocName = "menu_pane"
 
-    private fun pane(type: Material) = ItemBuilder(type, "&7").build()
+    private fun pane(type: Material) = ItemBuilder(type, "&7").locname(paneLocName).build()
 
     val CLEAR get() = pane(Material.GLASS_PANE).clone()
     val WHITE get() = pane(Material.WHITE_STAINED_GLASS_PANE).clone()
