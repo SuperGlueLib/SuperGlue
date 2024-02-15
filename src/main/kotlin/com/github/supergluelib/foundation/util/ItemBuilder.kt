@@ -1,9 +1,7 @@
 package com.github.supergluelib.foundation.util
 
-import com.github.supergluelib.foundation.*
 import com.github.supergluelib.foundation.extensions.toColor
 import com.github.supergluelib.foundation.extensions.toHashMap
-import com.google.gson.annotations.JsonAdapter
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Material
@@ -19,17 +17,15 @@ import java.util.*
 /**
  * A kotlin friendly class optimising and shortening the creation of custom itemstacks.
  */
+
 class ItemBuilder(private var type: Material, Name: String? = null, private var amount: Int? = null) {
     constructor(type: Material, amount: Int?): this(type, null, amount)
     var name: String? = Name
     var lore: ArrayList<String>? = null
     var locname: String? = null
-    @JsonAdapter(PersistentDataMapGsonAdapter.IntAdapter::class)
     var persistentInts: HashMap<NamespacedKey, Int>? = null
-    @JsonAdapter(PersistentDataMapGsonAdapter.StringAdapter::class)
     var persistentStrings: HashMap<NamespacedKey, String>? = null
     var useHex: Boolean? = null
-    @JsonAdapter(EnchantmentMapGsonAdapter::class)
     var enchants: HashMap<Enchantment, Int>? = null
     var hideEnchants: Boolean? = null
     var hideDye: Boolean? = null
@@ -61,7 +57,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     fun skullOwner(player: UUID) = apply { skullowner = player }
 
     fun build(): ItemStack {
-        val stack = ItemStack(type, amount ?: 1);
+        val stack = ItemStack(type, amount ?: 1)
         val meta = stack.itemMeta!!
         if (name != null) meta.setDisplayName(name!!.toColor(useHex ?: false))
         if (lore != null) meta.lore = lore!!.map { it.toColor(useHex ?: false) }

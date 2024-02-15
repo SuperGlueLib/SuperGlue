@@ -13,7 +13,6 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.World
-import org.bukkit.enchantments.Enchantment
 import java.lang.reflect.Type
 
 @RequiresOptIn("This Gson adapter is new and may be susecptible to bugs and errors, please report any issues you find", RequiresOptIn.Level.WARNING)
@@ -69,34 +68,6 @@ class BlockLocationAdapter(val world: World? = null): CustomAdapter<Location>() 
             .name("y").value(value.blockY)
             .name("z").value(value.blockZ)
             .endObject()
-    }
-}
-
-class EnchantmentMapGsonAdapter(): CustomAdapter<Map<Enchantment, Int>>() {
-    private val token = object: TypeToken<Map<Enchantment, Int>>(){}
-    private fun String.toEnchantByKey() = Enchantment.getByKey(NamespacedKey.minecraft(this))
-    override fun register(gson: GsonBuilder) = gson.registerTypeHierarchyAdapter(token.rawType, this)
-    override fun readIn(reader: JsonReader): Map<Enchantment, Int> {
-        val enchants = mutableMapOf<Enchantment, Int>()
-        reader.beginArray()
-        while (reader.peek() == JsonToken.BEGIN_OBJECT) {
-            reader.beginObject()
-            val enchant = reader.nextName().toEnchantByKey()!!
-            val level = reader.nextInt()
-            reader.endObject()
-            enchants[enchant] = level
-        }
-        reader.endArray()
-        return enchants
-    }
-    override fun writeOut(value: Map<Enchantment, Int>, writer: JsonWriter) {
-        writer.beginArray()
-        for (entry in value.entries) {
-            writer.beginObject()
-            writer.name(entry.key.key.key).value(entry.value)
-            writer.endObject()
-        }
-        writer.endArray()
     }
 }
 
@@ -207,39 +178,4 @@ class BlockPosArrayGsonAdapter(): CustomAdapter<BlockPos>() {
         reader.endArray()
         return pos
     }
-}
-
-internal sealed class PersistentDataMapGsonAdapter<T>(): CustomAdapter<Map<NamespacedKey, T>>() {
-    private val token = object: TypeToken<Map<NamespacedKey, T>>(){}
-    override fun register(gson: GsonBuilder): GsonBuilder = gson.registerTypeHierarchyAdapter(token.rawType, this)
-
-    override fun readIn(reader: JsonReader): Map<NamespacedKey, T>? {
-        reader.beginObject()
-        val map = hashMapOf<NamespacedKey, T>()
-        while (reader.peek() == JsonToken.NAME) {
-            map[NamespacedKey.fromString(reader.nextName())!!] = reader.readValue()
-        }
-        reader.endObject()
-        return map
-    }
-
-    override fun writeOut(value: Map<NamespacedKey, T>, writer: JsonWriter) {
-        writer.beginObject()
-        value.forEach { (key, data) -> writer.name(key.toString()).writeValue(data) }
-        writer.endObject()
-    }
-
-    abstract fun JsonWriter.writeValue(data: T): JsonWriter
-    abstract fun JsonReader.readValue(): T
-
-    class StringAdapter: PersistentDataMapGsonAdapter<String>() {
-        override fun JsonWriter.writeValue(data: String): JsonWriter = value(data)
-        override fun JsonReader.readValue(): String = nextString()
-    }
-
-    class IntAdapter: PersistentDataMapGsonAdapter<Int>() {
-        override fun JsonWriter.writeValue(data: Int): JsonWriter = value(data)
-        override fun JsonReader.readValue() = nextInt()
-    }
-
 }
