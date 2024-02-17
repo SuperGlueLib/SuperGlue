@@ -40,12 +40,12 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     fun lore(lines: List<String>) = apply { this.lore = ArrayList(lines) }
     fun addLores(lines: List<String>) = apply { lore = (lore ?: ArrayList()).apply { addAll(lines) } }
     fun addLore(vararg line: String) = addLores(line.toList())
-    fun addEnchant(enchant: Enchantment, level: Int) = apply { enchants?.put(enchant, level) ?: run { enchants = hashMapOf(enchant to level) } }
+    fun addEnchant(enchant: Enchantment, level: Int) = apply { if (enchants == null) enchants = hashMapOf(enchant to level) else enchants!![enchant] = level }
     fun enchants(enchants: Map<Enchantment, Int>) = apply { this@ItemBuilder.enchants = enchants.toHashMap() }
     fun hideEnchants(hide: Boolean) = apply { hideEnchants = hide }
     fun locname(locname: String) = apply { this.locname = locname }
-    fun addPersistentInt(key: NamespacedKey, data: Int) = apply { persistentInts?.put(key, data) ?: run { persistentInts = hashMapOf(key to data) } }
-    fun addPersistentString(key: NamespacedKey, data: String) = apply { persistentStrings?.put(key, data) ?: run { persistentStrings = hashMapOf(key to data) }  }
+    fun addPersistentInt(key: NamespacedKey, data: Int) = apply { if (persistentInts == null) persistentInts = hashMapOf(key to data) else persistentInts!![key] = data }
+    fun addPersistentString(key: NamespacedKey, data: String) = apply { if (persistentStrings == null) persistentStrings = hashMapOf(key to data) else persistentStrings!![key] = data }
 
     fun hex(use: Boolean) = apply { useHex = use }
     fun unbreakable(unbreakable: Boolean) = apply { this.unbreakable = unbreakable }
