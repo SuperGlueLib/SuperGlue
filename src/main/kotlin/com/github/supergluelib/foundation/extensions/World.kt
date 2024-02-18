@@ -19,3 +19,21 @@ fun Location.dropItem(item: ItemStack) = world?.dropItem(this, item)
 /** Spawns a particle at this location that everyone can see */
 fun Location.spawnParticle(particle: Particle, count: Int, offsetAllAxes: Double = 0.0, extra: Double = 0.0, data: Any? = null) = world
     ?.spawnParticle(particle, this, count, offsetAllAxes, offsetAllAxes, offsetAllAxes, extra, data)
+
+/** @return the minimum x, y and z between these two locations */
+fun Location.min(other: Location) = Location(world,
+    minOf(x, other.x),
+    minOf(y, other.y),
+    minOf(z, other.z),
+    yaw,
+    pitch
+)
+
+/** @return the maximum x, y and z between these two locations */
+fun Location.max(other: Location) = Location(world,
+    maxOf(x, other.x),
+    maxOf(y, other.y),
+    maxOf(z, other.z),
+    yaw,
+    pitch
+)
