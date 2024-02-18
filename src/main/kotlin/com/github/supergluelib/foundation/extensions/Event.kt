@@ -5,6 +5,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.player.PlayerEvent
 import org.bukkit.plugin.java.JavaPlugin
 
 /** Easy Listener registering :D */
@@ -21,3 +22,6 @@ fun InventoryClickEvent.clickedTopInventory() = clickedInventory?.equals(view.to
 
 /** @return the [Player] who clicked... like a [HumanEntity][org.bukkit.entity.HumanEntity] only better... */
 val InventoryClickEvent.player get() = whoClicked as Player
+
+/** the uuid of the player involved with this event */
+val PlayerEvent.uuid get() = player.uniqueId
