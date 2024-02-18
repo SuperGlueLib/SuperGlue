@@ -29,3 +29,15 @@ fun Material.formattedName() = toString()
     .split("_")
     .joinToString(" ") { it.lowercase().replaceFirstChar(Char::uppercase) }
 
+/** Convert the map from <Material, Int> into ItemStacks with max sizes of 64 */
+fun Map<Material, Int>.toItemStacks() = entries.flatMap {
+    val items = mutableListOf<ItemStack>()
+    var amt = it.value
+
+    while (amt > 0) {
+        val itemAmt = minOf(64, amt)
+        amt -= itemAmt
+        items.add(ItemStack(it.key, itemAmt))
+    }
+    items
+}
