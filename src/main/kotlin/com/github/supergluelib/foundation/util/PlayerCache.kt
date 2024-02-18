@@ -7,6 +7,7 @@ import com.github.supergluelib.foundation.extensions.register
 import com.github.supergluelib.foundation.extensions.uuid
 import com.google.common.cache.CacheBuilder
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -84,4 +85,7 @@ abstract class PlayerCache<T>: Listener {
             Runnables.runTask { callback.invoke(offlineData) }
         }
     }
+
+    /** Grabs the cached data for this player and saves it asynchronously */
+    fun saveAsync(player: Player) = saveAsync(player.uniqueId, getOnlineData(player.uniqueId)!!)
 }
