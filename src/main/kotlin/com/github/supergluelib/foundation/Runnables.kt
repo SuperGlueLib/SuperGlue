@@ -18,6 +18,10 @@ object Runnables {
     fun runNextTick(code: () -> Unit) = Bukkit.getScheduler().runTaskLater(plugin, code, 0)
     /** Run the code after [ticks] ticks */
     fun runLater(ticks: Int, code: () -> Unit) = Bukkit.getScheduler().runTaskLater(plugin, code, ticks.toLong())
+    /** Calls Scheduler.runTask, running the code at the next available interval */
+    fun runTask(code: () -> Unit) = Bukkit.getScheduler().runTask(plugin, code)
+    /** Calls Scheduler.runTask, synchronously running the code on the next available tick. */
+    fun sync(code: () -> Unit) = Bukkit.getScheduler().runTask(plugin, code)
 
     /** Starts a timer running after every interval
      * @param interval the time between executions in ticks
