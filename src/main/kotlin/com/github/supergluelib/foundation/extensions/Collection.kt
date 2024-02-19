@@ -14,6 +14,17 @@ fun Array<out Any>.sublist(begin: Int, end: Int = size) = Array(end-begin) { thi
 /** Fluent method to convert a map to a hashmap */
 fun <K, V> Map<K, V>.toHashMap() = HashMap(this)
 
+/** Works the same as [associate] but omits transformations of which the keys result in null */
+fun <T, K, V> Iterable<T>.associateNotNullKeys(transform: (T) -> Pair<K?, V>): Map<K, V> {
+    val newmap = LinkedHashMap<K, V>()
+    for (element in this) {
+        val transformation = transform(element)
+        if (transformation.first != null)
+            newmap[transformation.first!!] = transformation.second
+    }
+    return newmap
+}
+
 /**
  * Acts the same as [Collection.filter] but allows the result to be null,
  * the returned list only contains values which returned true, not false or null
