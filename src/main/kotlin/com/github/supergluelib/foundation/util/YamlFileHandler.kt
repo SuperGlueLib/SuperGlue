@@ -6,6 +6,11 @@ import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
+/**
+ * Handles the setting up, saving and reloading of a YAML file.
+ * - onReload is called when the class is loaded
+ * - Variables created in the subclass must be lateinit as onReload() is called *before* sub-instantiation
+ */
 abstract class YamlFileHandler(private val plugin: JavaPlugin, val name: String, resource: Boolean = false) {
     val file: File = File(plugin.dataFolder, name)
     var config: FileConfiguration
