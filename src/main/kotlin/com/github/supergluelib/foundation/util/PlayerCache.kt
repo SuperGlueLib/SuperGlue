@@ -19,31 +19,31 @@ import java.util.concurrent.TimeUnit
 /**
  *
  */
-abstract class PlayerCache<T>: Listener {
+abstract class PlayerCache<T> {
 
-    init {
-        register(Foundations.plugin)
-    }
+    private val listener = PlayerCacheListener().apply { register(Foundations.plugin) }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    fun loadPlayerDataOnJoin(event: PlayerJoinEvent) {
-        val uuid = event.player.uniqueId
-        val secData = secondaryCache.getIfPresent(uuid)
-        if (secData != null) {
-            secondaryCache.invalidate(uuid)
-            onlineCache[uuid] = secData
-        } else {
-            async { onlineCache[uuid] = load(uuid) }
+    private inner class PlayerCacheListener(): Listener {
+        @EventHandler(priority = EventPriority.LOWEST)
+        fun loadPlayerDataOnJoin(event: PlayerJoinEvent) {
+            val uuid = event.player.uniqueId
+            val secData = secondaryCache.getIfPresent(uuid)
+            if (secData != null) {
+                secondaryCache.invalidate(uuid)
+                onlineCache[uuid] = secData
+            } else {
+                async { onlineCache[uuid] = load(uuid) }
+            }
         }
-    }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    fun removeDataOnQuit(event: PlayerQuitEvent) {
-        val uuid = event.uuid
-        val onlineData = onlineCache[uuid] ?: return
-        saveAsync(uuid, onlineData)
-        onlineCache.remove(uuid)
-        secondaryCache.put(uuid, onlineData)
+        @EventHandler(priority = EventPriority.HIGHEST)
+        fun removeDataOnQuit(event: PlayerQuitEvent) {
+            val uuid = event.uuid
+            val onlineData = onlineCache[uuid] ?: return
+            saveAsync(uuid, onlineData)
+            onlineCache.remove(uuid)
+            secondaryCache.put(uuid, onlineData)
+        }
     }
 
     private val onlineCache = hashMapOf<UUID, T>()
@@ -85,6 +85,9 @@ abstract class PlayerCache<T>: Listener {
             Runnables.runTask { callback.invoke(offlineData) }
         }
     }
+
+    /** @return the data found in the cache, otherwise null */
+    fun getCacheData(uuid: UUID): T? = getOnlineData(uuid)
 
     /** Grabs the cached data for this player and saves it asynchronously */
     fun saveAsync(player: Player) = saveAsync(player.uniqueId, getOnlineData(player.uniqueId)!!)
