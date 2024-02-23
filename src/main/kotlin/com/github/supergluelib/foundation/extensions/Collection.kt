@@ -30,3 +30,9 @@ fun <T, K, V> Iterable<T>.associateNotNullKeys(transform: (T) -> Pair<K?, V>): M
  * the returned list only contains values which returned true, not false or null
  */
 fun <T> Iterable<T>.filterTrue(predicate: (T) -> Boolean?) = filter { predicate.invoke(it) == true }
+
+/** @return the element immediately after the provided element. e.g. B in ("A", "B", "C").elementAfter("A") */
+fun <T> List<T>.elementAfter(ele: T) = elementAtOrNull(indexOf(ele) + 1)
+
+/** @return the element immediately before the provided element. e.g. "A" in ("A", "B", "C").elementBefore("B") */
+fun <T> List<T>.elementBefore(ele: T) = elementAtOrNull(indexOf(ele) - 1)
