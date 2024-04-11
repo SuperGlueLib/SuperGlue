@@ -22,7 +22,8 @@ fun Location.dropItem(item: ItemStack) = world?.dropItem(this, item)
 fun Location.spawnParticle(particle: Particle, count: Int, offsetAllAxes: Double = 0.0, extra: Double = 0.0, data: Any? = null) = world
     ?.spawnParticle(particle, this, count, offsetAllAxes, offsetAllAxes, offsetAllAxes, extra, data)
 
-fun Location.spawnEntity(clazz: Class<Entity>, initiator: (Entity) -> Unit): Entity = world!!.spawn(this, clazz, initiator)
+/** Spawns an entity at the given location */
+fun <T: Entity> Location.spawnEntity(clazz: Class<T>, initiator: (T) -> Unit): T = world!!.spawn(this, clazz, initiator)
 
 
 /** @return the minimum x, y and z between these two locations */
