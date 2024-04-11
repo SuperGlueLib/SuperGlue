@@ -10,6 +10,7 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.event.player.PlayerInteractAtEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
 
@@ -91,6 +92,14 @@ internal class ItemListener: Listener {
         if (!customItem.settings.canPlace) return event.cancel()
         if (customItem is CustomBlock<*>)
             customItem.callCustomBlockPlace(event)
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun onProjectileHit(event: ProjectileHitEvent) {
+        val customProjectile = SuperItems.getProjectile(event.entity) ?: return
+        customProjectile.onHit(event.entity, event.entity.location, event)
+        event.hitBlock?.let { customProjectile.onHitBlock(event.entity, it, event) }
+        event.hitEntity?.let { customProjectile.onHitEntity(event.entity, it, event) }
     }
 
 }
