@@ -19,6 +19,11 @@ object SuperItems {
         items.forEach(this::register)
     }
 
+    fun unregister(vararg items: CustomItem) {
+        if (!setup) Bukkit.getLogger().warning("Make sure you have used Foundations.setup(plugin) before using custom items")
+
+    }
+
     fun Foundations.registerItems(vararg items: CustomItem) = Foundations.also { register(*items) }
 
     private val items: HashMap<Class<out CustomItem>, CustomItem> = hashMapOf()
@@ -29,6 +34,11 @@ object SuperItems {
     private fun <T: CustomItem> register(item: T) {
         items[item::class.java] = item
         if (item is CustomBlock<*>) blocks[item::class.java as Class<out CustomBlock<*>>] = item
+    }
+
+    private fun <T: CustomItem> unregister(item: T) {
+        items.remove(item::class.java)
+        if (item is CustomBlock<*>) blocks.remove(item::class.java as Class<out CustomBlock<*>>)
     }
 
     fun getByBlock(clazz: Class<out CustomBlock<*>>) = blocks[clazz]
