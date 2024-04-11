@@ -16,11 +16,14 @@ class CooldownMap<T>(val duration: Duration) {
     fun add(target: T) { cache.put(target!!, System.currentTimeMillis() + duration.toMillis()) }
     /** Cancel the cooldown for this target */
     fun cancel(target: T) = cache.invalidate(target!!)
-
     /** @return true if this target has a cooldown */
     fun has(target: T) = cache.getIfPresent(target!!) != null
+
+    /** @return the time in milliseconds ( epoch time ) that this cooldown will be over */
+    fun getEndTime(target: T) = cache.getIfPresent(target!!)
+
     /** @return the milliseconds left on this targets cooldown, or 0 */
-    fun getMillis(target: T): Long = cache.getIfPresent(target!!) ?: 0
+    fun getMillisRemaining(target: T): Long = getEndTime(target)?.minus(System.currentTimeMillis()) ?: 0
     /** @return the seconds left on this targets cooldown or 0, rounded up */
-    fun getSeconds(target: T): Int = ceil(getMillis(target) / 1000.0).toInt()
+    fun getSecondsRemaining(target: T): Int = ceil(getMillisRemaining(target) / 1000.0).toInt()
 }
