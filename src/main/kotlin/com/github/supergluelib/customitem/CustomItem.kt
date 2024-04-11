@@ -26,9 +26,16 @@ abstract class CustomItem() {
     val settings = Settings()
 
     abstract fun isItem(item: ItemStack, meta: ItemMeta = item.itemMeta!!): Boolean
-    /** This method assumes that [isItem] is true */
-    abstract fun fromItemStack(item: ItemStack): CustomItem
     abstract fun getItem(): ItemStack
+
+    /**
+     * This method takes an ItemStack and converts it into an instance of this class.
+     * This allows you to implement logic using instance fields and separate the reading logic.
+     * If you have no instance fields then you do not need to override this method.
+     *
+     * - This method assumes that [isItem] is true
+     */
+    open fun fromItemStack(item: ItemStack): CustomItem = this
 
     open fun onRightClick(player: Player, item: ItemStack, event: Event) {}
     open fun onLeftClick(player: Player, item: ItemStack, event: Event) {}
