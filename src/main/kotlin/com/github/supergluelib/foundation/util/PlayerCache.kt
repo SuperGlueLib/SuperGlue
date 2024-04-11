@@ -31,8 +31,13 @@ abstract class PlayerCache<T> {
             if (secData != null) {
                 secondaryCache.invalidate(uuid)
                 onlineCache[uuid] = secData
+                onPlayerJoin(event.player, secData)
             } else {
-                async { onlineCache[uuid] = load(uuid) }
+                async {
+                    val data = load(uuid)
+                    onlineCache[uuid] = data
+                    Runnables.runTask { onPlayerJoin(event.player, data) }
+                }
             }
         }
 
@@ -70,6 +75,12 @@ abstract class PlayerCache<T> {
      * - This method needs to be thread-safe! It is always called asynchronously
      */
     protected abstract fun save(uuid: UUID, data: T)
+
+    /**
+     * Called after a player has joined the server and their data has finished loading.
+     * - This method is called synchronously
+     */
+    protected open fun onPlayerJoin(player: Player, data: T) {}
 
     // Handler getter methods
     /**
