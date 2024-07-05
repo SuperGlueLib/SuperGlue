@@ -17,4 +17,7 @@ class SQLiteDatabase(val file: File) {
 
     // Connection Management
     fun close() = connection.close()
+
+    /** @return a pair with this object to it's associated class object, useful for bypassing type erasure */
+    fun <T: Any> T.toClassPair() = this to this::class.java
 }

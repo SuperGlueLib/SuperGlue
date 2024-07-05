@@ -5,10 +5,6 @@ import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.util.*
 
-
-/** @return a pair with this object to it's associated class object, useful for bypassing type erasure */
-fun <T: Any> T.toClassPair() = this to this::class.java
-
 /**
  * uses [PreparedStatement.setObject] to fill in the placeholders for this [PreparedStatement]
  */

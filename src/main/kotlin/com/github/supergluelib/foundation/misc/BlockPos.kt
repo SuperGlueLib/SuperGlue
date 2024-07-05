@@ -18,6 +18,9 @@ data class BlockPos(val x: Int, val y: Int, val z: Int) {
     /** @return a new BlockPos containing the addition of each coordinate of the original two BlockPos's */
     fun add(other: BlockPos) = BlockPos(other.x + x, other.y + y, other.z + z)
 
+    /** @return a new BlockPos with the parameters added on to their respective coordinates */
+    fun add(x: Int, y: Int, z: Int) = BlockPos(this.x + x, this.y + y, this.z + z)
+
     /** @return a new BlockPos which has the coordinates of the [other] BlockPos subtracted from this BlockPos */
     fun subtract(other: BlockPos) = BlockPos(x - other.x, y - other.y, z - other.z)
 }
