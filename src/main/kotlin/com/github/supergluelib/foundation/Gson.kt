@@ -1,7 +1,9 @@
 package com.github.supergluelib.foundation
 
 import com.github.supergluelib.foundation.extensions.toHashMap
+import com.github.supergluelib.foundation.extensions.toUUID
 import com.github.supergluelib.foundation.misc.BlockPos
+import com.github.supergluelib.foundation.misc.WorldBlockPos
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.TypeAdapter
@@ -177,5 +179,19 @@ class BlockPosArrayGsonAdapter(): CustomAdapter<BlockPos>() {
         val pos = BlockPos(reader.nextInt(), reader.nextInt(), reader.nextInt())
         reader.endArray()
         return pos
+    }
+}
+class WorldBlockPosGsonAdapter(): CustomAdapter<WorldBlockPos>() {
+    override fun register(gson: GsonBuilder) = gson.registerTypeAdapter(WorldBlockPos::class.java, this)
+    override fun readIn(reader: JsonReader): WorldBlockPos {
+        reader.beginArray()
+        val pos = WorldBlockPos(reader.nextString().toUUID()!!, reader.nextInt(), reader.nextInt(), reader.nextInt())
+        reader.endArray()
+        return pos
+    }
+
+    override fun writeOut(pos: WorldBlockPos, writer: JsonWriter) { writer.beginArray()
+            .value(pos.worldId.toString()).value(pos.x).value(pos.y).value(pos.z)
+            .endArray()
     }
 }
