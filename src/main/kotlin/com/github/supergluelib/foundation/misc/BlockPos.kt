@@ -9,7 +9,8 @@ import java.util.UUID
 
 val Location.worldBlockPos get() = WorldBlockPos(world!!.uid, blockX, blockY, blockZ)
 val Location.blockPos get() = BlockPos(blockX, blockY, blockZ)
-val Block.blockPos get() = location.worldBlockPos
+val Block.blockPos get() = location.blockPos
+val Block.worldBlockPos get() = location.worldBlockPos
 val BlockState.blockPos get() = location.blockPos
 
 interface BlockPosBase {
