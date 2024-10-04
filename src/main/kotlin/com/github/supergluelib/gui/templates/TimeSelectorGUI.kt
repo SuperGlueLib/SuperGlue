@@ -34,7 +34,11 @@ class TimeSelectorGUI(val withTime: (Pair<Int, TimeUnit>) -> Unit): GUI() {
             TimeUnitSelection(this@TimeSelectorGUI).open(player)
         }
 
-        setButton(13, ItemBuilder(Material.LIME_STAINED_GLASS_PANE, "&aDone").build()) {
+        val doneItem = if (isComplete) ItemBuilder(Material.LIME_STAINED_GLASS_PANE, "&aDone")
+            .addLore("&7Selected: $amount $timeunit").build()
+        else ItemBuilder(Material.RED_STAINED_GLASS_PANE, "&cIncomplete").build()
+
+        setButton(13, doneItem) {
             if (!isComplete) player.send("&cInvalid time specified")
             else withTime.invoke(amount!! to timeunit!!)
         }
