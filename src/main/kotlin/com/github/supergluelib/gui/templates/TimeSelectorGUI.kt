@@ -15,7 +15,7 @@ class TimeSelectorGUI(val withTime: (Pair<Int, TimeUnit>) -> Unit): GUI() {
     var timeunit: TimeUnit? = null
     var amount: Int? = null
     override fun generateInventory() = createInventory("Time Selection", 27) {
-        setButton(12, ItemBuilder(Material.OAK_SIGN,"Choose Amount").addLore("&7Currently: ${amount ?: "Unspecified"}").build()) {
+        setButton(11, ItemBuilder(Material.OAK_SIGN,"Choose Amount").addLore("&7Currently: ${amount ?: "Unspecified"}").build()) {
             GUIManager.closeGui(player)
             player.send("&6Type the number of units in the chat (example: 15)")
             Input.Chat.take(player) {
@@ -25,11 +25,11 @@ class TimeSelectorGUI(val withTime: (Pair<Int, TimeUnit>) -> Unit): GUI() {
             }
         }
 
-        setButton(16, ItemBuilder(Material.CLOCK, "Choose Unit").addLore("&7Currently: ${timeunit ?: "Unspecified"}").build()){
+        setButton(15, ItemBuilder(Material.CLOCK, "Choose Unit").addLore("&7Currently: ${timeunit ?: "Unspecified"}").build()){
             TimeUnitSelection(this@TimeSelectorGUI).open(player)
         }
 
-        setButton(14, ItemBuilder(Material.LIME_STAINED_GLASS_PANE, "&aDone").build()) {
+        setButton(13, ItemBuilder(Material.LIME_STAINED_GLASS_PANE, "&aDone").build()) {
             if (timeunit == null || amount == null) player.send("&cInvalid time unit specified")
             else withTime.invoke(amount!! to timeunit!!)
         }
