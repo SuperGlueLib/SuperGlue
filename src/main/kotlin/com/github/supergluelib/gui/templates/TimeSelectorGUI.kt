@@ -12,25 +12,30 @@ import org.bukkit.Material
 import java.util.concurrent.TimeUnit
 
 class TimeSelectorGUI(val withTime: (Pair<Int, TimeUnit>) -> Unit): GUI() {
-    var timeunit: TimeUnit? = null
     var amount: Int? = null
-    override fun generateInventory() = createInventory("Time Selection", 27) {
+    var timeunit: TimeUnit? = null
+
+    inline val isComplete get() = amount != null && timeunit != null
+    private val titleExtension get() = if (isComplete) " ($amount $timeunit)" else ""
+
+    override fun generateInventory() = createInventory("Time Selection$titleExtension", 27) {
         setButton(11, ItemBuilder(Material.OAK_SIGN,"Choose Amount").addLore("&7Currently: ${amount ?: "Unspecified"}").build()) {
             GUIManager.closeGui(player)
             player.send("&6Type the number of units in the chat (example: 15)")
             Input.Chat.take(player) {
                 if (it.isInt()) this@TimeSelectorGUI.amount = it.toInt()
                 else player.send("&cYou have specified an invalid number '$it'")
+                if (isComplete) invalidateInventoryCache() // Update title if necessary
                 this@TimeSelectorGUI.open(player)
             }
         }
 
-        setButton(15, ItemBuilder(Material.CLOCK, "Choose Unit").addLore("&7Currently: ${timeunit ?: "Unspecified"}").build()){
+        setButton(15, ItemBuilder(Material.CLOCK, "Choose Unit").addLore("&7Currently: ${timeunit ?: "Unspecified"}").build()) {
             TimeUnitSelection(this@TimeSelectorGUI).open(player)
         }
 
         setButton(13, ItemBuilder(Material.LIME_STAINED_GLASS_PANE, "&aDone").build()) {
-            if (timeunit == null || amount == null) player.send("&cInvalid time unit specified")
+            if (!isComplete) player.send("&cInvalid time specified")
             else withTime.invoke(amount!! to timeunit!!)
         }
     }
@@ -53,6 +58,7 @@ class TimeSelectorGUI(val withTime: (Pair<Int, TimeUnit>) -> Unit): GUI() {
         override fun onClick(click: ClickData) {
             val unit = click.locname?.let(TimeUnit::valueOf) ?: return
             selector.timeunit = unit
+            if (selector.isComplete) selector.invalidateInventoryCache() // Update title if necessary
             selector.open(click.player)
         }
     }
