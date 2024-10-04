@@ -131,6 +131,18 @@ abstract class GUI {
 
     protected fun ItemStack.isMenuPane() = locnameIs(Panes.paneLocName)
 
+    /**
+     * When you open a GUI instance for the first time it caches the inventory so that one GUI instance retains
+     * one persistent inventory. By invalidating this cache, it will rebuild the inventory on the next open using [generateInventory]
+     */
+    protected fun invalidateInventoryCache() {
+        if (inventory == null) return
+        // If there are any current inventory viewers, re-open the inventory for them immediately.
+        val viewers = inventory!!.viewers
+        inventory = null
+        viewers.forEach { open(it as Player) }
+    }
+
     // Abstract methods
     protected abstract fun generateInventory(): Inventory
 
