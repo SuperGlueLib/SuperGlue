@@ -25,7 +25,7 @@ abstract class CustomItem() {
     class Settings(var canPlace: Boolean = false)
     val settings = Settings()
 
-    abstract fun isItem(item: ItemStack, meta: ItemMeta, identifier: String?): Boolean
+    abstract fun isItem(item: ItemStack, meta: ItemMeta, id: String?): Boolean
     abstract fun getItem(): ItemStack
 
     /**

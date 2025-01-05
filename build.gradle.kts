@@ -15,12 +15,14 @@ repositories {
     maven("https://www.jitpack.io")
 }
 
+val lampVersion = "4.0.0-rc.2"
+
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
 
-    api("com.github.Revxrsal.Lamp:common:3.1.5")
-    api("com.github.Revxrsal.Lamp:bukkit:3.1.5")
-    api("com.github.Revxrsal.Lamp:brigadier:3.1.5")
+    api("io.github.revxrsal:lamp.common:$lampVersion")
+    api("io.github.revxrsal:lamp.bukkit:$lampVersion")
+    api("io.github.revxrsal:lamp.brigadier:$lampVersion")
 
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
         exclude("org.bukkit")
