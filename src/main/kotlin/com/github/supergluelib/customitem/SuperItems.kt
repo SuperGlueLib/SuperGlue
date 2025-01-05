@@ -36,7 +36,7 @@ object SuperItems {
 
     internal fun fromItemStack(item: ItemStack): CustomItem? = item.itemMeta?.let { meta ->
         val id = meta.getIdentifier()
-        items.values.find { it.isItem(item, meta, id) }?.fromItemStack(item)
+        items.values.find { it.isItem(item, meta, id) }?.fromItemStack(item, meta, id)
     }
 
     internal fun getCustomBlock(block: Block) = blocks.values.find { it.isBlock(block) }

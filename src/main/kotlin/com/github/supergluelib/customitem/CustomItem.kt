@@ -34,8 +34,9 @@ abstract class CustomItem() {
      * If you have no instance fields then you do not need to override this method.
      *
      * - This method assumes that [isItem] is true
+     * - The default implementation when no state is necessary can simply return `this`
      */
-    open fun fromItemStack(item: ItemStack): CustomItem = this
+    abstract fun fromItemStack(item: ItemStack, meta: ItemMeta, id: String?): CustomItem
 
     open fun onRightClick(player: Player, item: ItemStack, event: Event) {}
     open fun onLeftClick(player: Player, item: ItemStack, event: Event) {}
