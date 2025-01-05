@@ -16,6 +16,7 @@ object SuperItems {
     internal fun setup(plugin: JavaPlugin) {
         setup = true
         plugin.registerListeners( ItemListener() )
+        idKey = NamespacedKey(plugin, "superglue-id")
     }
 
     fun register(vararg items: CustomItem) {
@@ -57,7 +58,7 @@ object SuperItems {
     fun getByBlock(clazz: Class<out CustomBlock<*>>) = blocks[clazz]
 
     // New Item Identifier System
-    val idKey = NamespacedKey(Foundations.plugin, "superglue-id")
+    lateinit var idKey: NamespacedKey
     fun ItemMeta.setIdentifier(id: String) = persistentDataContainer.set(idKey, PersistentDataType.STRING, id)
     fun ItemMeta.getIdentifier(): String? = persistentDataContainer.get(idKey, PersistentDataType.STRING)
 
