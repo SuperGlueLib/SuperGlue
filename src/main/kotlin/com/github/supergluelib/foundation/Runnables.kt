@@ -1,6 +1,7 @@
 package com.github.supergluelib.foundation
 
 import org.bukkit.Bukkit
+import org.bukkit.scheduler.BukkitRunnable
 
 /**Run the code asynchronously */
 fun async(code: () -> Unit) = Runnables.async(code)
@@ -28,6 +29,14 @@ object Runnables {
      * @param delay the time before the first execution in ticks.
      */
     fun runTimer(interval: Int, delay: Int = 0, code: () -> Unit) = Bukkit.getScheduler().runTaskTimer(plugin, code, delay.toLong(), interval.toLong())
+
+    /**
+     * Same as [Runnables.runTimer] but provides access to the underlying anonymous class implementation.
+     * Useful if you are cancelling the timer within the provided code-block.
+     */
+    fun runTimerWithClass(interval: Int, delay: Int = 0, code: (BukkitRunnable) -> Unit) = object: BukkitRunnable() {
+        override fun run() = code.invoke(this)
+    }.runTaskTimer(plugin, delay.toLong(), interval.toLong())
 
     /** Run the code asynchronously */
     fun async(code: () -> Unit) = Bukkit.getScheduler().runTaskAsynchronously(plugin, code)
