@@ -15,14 +15,8 @@ fun ItemStack.isBasic() = this.isSimilar(ItemStack(type))
 /** @return this itemstack if it is not air, or null if it is */
 fun ItemStack.takeIfNotAir() = if (type.isAir) null else this
 
-/** @return true if the localized name of this item exists and is equal to [loc] */
-fun ItemStack.locnameIs(loc: String): Boolean = itemMeta?.localizedName == loc
-
 /** @return The value gotten from the persistent data container of this item using the given key and type */
 private fun <T> ItemStack.getPersistent(key: NamespacedKey, type: PersistentDataType<T, T>) = itemMeta?.persistentDataContainer?.get(key, type)
-
-/** @return true if the localized name of this item exists and is equal to [loc] */
-fun ItemMeta.locnameIs(loc: String): Boolean = localizedName == loc
 
 /** Gets the name of the material in a prettier format i.e. BROWN_MUSHROOM -> Brown Mushroom */
 fun Material.formattedName() = toString()

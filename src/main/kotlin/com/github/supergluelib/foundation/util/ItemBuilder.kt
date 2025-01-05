@@ -1,5 +1,7 @@
 package com.github.supergluelib.foundation.util
 
+import com.github.supergluelib.customitem.SuperItems.getIdentifier
+import com.github.supergluelib.customitem.SuperItems.setIdentifier
 import com.github.supergluelib.foundation.extensions.toColor
 import com.github.supergluelib.foundation.extensions.toHashMap
 import org.bukkit.Bukkit
@@ -22,7 +24,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     constructor(type: Material, amount: Int?): this(type, null, amount)
     var name: String? = Name
     var lore: ArrayList<String>? = null
-    var locname: String? = null
+    var identifier: String? = null
     var persistentInts: HashMap<NamespacedKey, Int>? = null
     var persistentStrings: HashMap<NamespacedKey, String>? = null
     var useHex: Boolean? = null
@@ -43,7 +45,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     fun addEnchant(enchant: Enchantment, level: Int) = apply { if (enchants == null) enchants = hashMapOf(enchant to level) else enchants!![enchant] = level }
     fun enchants(enchants: Map<Enchantment, Int>) = apply { this@ItemBuilder.enchants = enchants.toHashMap() }
     fun hideEnchants(hide: Boolean) = apply { hideEnchants = hide }
-    fun locname(locname: String) = apply { this.locname = locname }
+    fun identifier(id: String) = apply { this.identifier = id }
     fun addPersistentInt(key: NamespacedKey, data: Int) = apply { if (persistentInts == null) persistentInts = hashMapOf(key to data) else persistentInts!![key] = data }
     fun addPersistentString(key: NamespacedKey, data: String) = apply { if (persistentStrings == null) persistentStrings = hashMapOf(key to data) else persistentStrings!![key] = data }
 
@@ -61,7 +63,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
         val meta = stack.itemMeta!!
         if (name != null) meta.setDisplayName(name!!.toColor(useHex ?: false))
         if (lore != null) meta.lore = lore!!.map { it.toColor(useHex ?: false) }
-        locname?.let(meta::setLocalizedName)
+        identifier?.let { meta.setIdentifier(identifier!!) }
         unbreakable?.let(meta::setUnbreakable)
         if (persistentInts?.isNotEmpty() == true)
             persistentInts!!.entries.forEach { meta.persistentDataContainer[it.key, PersistentDataType.INTEGER] = it.value }
@@ -87,7 +89,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     constructor(item: ItemStack, hex: Boolean? = null): this(item.type, item.amount.takeIf { it != 1 }) {
         val meta = item.itemMeta ?: return
         if (meta.hasLore()) lore(meta.lore!!)
-        if (meta.hasLocalizedName()) locname(meta.localizedName)
+        if (meta.getIdentifier() != null) identifier(meta.getIdentifier()!!)
         if (meta.hasEnchants()) enchants(meta.enchants)
         if (meta.hasItemFlag(ItemFlag.HIDE_ENCHANTS)) hideEnchants(true)
         val pdc = meta.persistentDataContainer

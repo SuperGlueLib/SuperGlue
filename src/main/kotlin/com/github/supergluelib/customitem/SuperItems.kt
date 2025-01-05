@@ -3,9 +3,12 @@ package com.github.supergluelib.customitem
 import com.github.supergluelib.foundation.Foundations
 import com.github.supergluelib.foundation.extensions.registerListeners
 import org.bukkit.Bukkit
+import org.bukkit.NamespacedKey
 import org.bukkit.block.Block
 import org.bukkit.entity.Projectile
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.ItemMeta
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 
 object SuperItems {
@@ -31,7 +34,11 @@ object SuperItems {
     private val blocks: HashMap<Class<out CustomBlock<*>>, CustomBlock<*>> = hashMapOf()
     private val projectiles: HashMap<Class<out ThrowableItem>, ThrowableItem> = hashMapOf()
 
-    internal fun fromItemStack(item: ItemStack) = item.itemMeta?.let { meta -> items.values.find { it.isItem(item, meta) }?.fromItemStack(item) }
+    internal fun fromItemStack(item: ItemStack): CustomItem? = item.itemMeta?.let { meta ->
+        val id = meta.getIdentifier()
+        items.values.find { it.isItem(item, meta, id) }?.fromItemStack(item)
+    }
+
     internal fun getCustomBlock(block: Block) = blocks.values.find { it.isBlock(block) }
     internal fun getProjectile(proj: Projectile) = projectiles.values.find { it.isProjectile(proj) }
 
@@ -48,4 +55,10 @@ object SuperItems {
     }
 
     fun getByBlock(clazz: Class<out CustomBlock<*>>) = blocks[clazz]
+
+    // New Item Identifier System
+    val idKey = NamespacedKey(Foundations.plugin, "superglue-id")
+    fun ItemMeta.setIdentifier(id: String) = persistentDataContainer.set(idKey, PersistentDataType.STRING, id)
+    fun ItemMeta.getIdentifier(): String? = persistentDataContainer.get(idKey, PersistentDataType.STRING)
+
 }

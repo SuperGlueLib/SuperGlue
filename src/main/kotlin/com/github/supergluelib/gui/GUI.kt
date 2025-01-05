@@ -1,19 +1,19 @@
 package com.github.supergluelib.gui
 
+import com.github.supergluelib.customitem.SuperItems.getIdentifier
 import com.github.supergluelib.foundation.Foundations
 import com.github.supergluelib.foundation.extensions.clickedTopInventory
 import com.github.supergluelib.foundation.extensions.isValid
-import com.github.supergluelib.foundation.extensions.locnameIs
 import com.github.supergluelib.foundation.extensions.toColor
 import com.github.supergluelib.foundation.misc.PluginMessager.connectToBungeeServer
 import com.github.supergluelib.foundation.util.ItemBuilder
+import com.github.supergluelib.gui.guiparts.Button
+import com.github.supergluelib.gui.guiparts.Button.Companion.getId
 import com.github.supergluelib.gui.guiparts.Button.Companion.isButton
 import com.github.supergluelib.gui.guiparts.DynamicButton
 import com.github.supergluelib.gui.types.CloseEvent
 import com.github.supergluelib.gui.types.ForceKeepOpen
 import com.github.supergluelib.gui.types.OpenEvent
-import com.github.supergluelib.gui.guiparts.Button
-import com.github.supergluelib.gui.guiparts.Button.Companion.getId
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -99,7 +99,7 @@ abstract class GUI {
     }
 
     // manager methods
-    private fun isBackButton(item: ItemStack) = item.itemMeta?.localizedName?.equals("return") == true
+    private fun isBackButton(item: ItemStack) = item.itemMeta?.getIdentifier()?.equals("return") == true
 
     internal fun runClick(clickdata: ClickData) {
         val item = clickdata.item
@@ -129,7 +129,7 @@ abstract class GUI {
         }
     }
 
-    protected fun ItemStack.isMenuPane() = locnameIs(Panes.paneLocName)
+    protected fun ItemStack.isMenuPane() = Panes.paneIdentifier == itemMeta?.getIdentifier()
 
     /**
      * When you open a GUI instance for the first time it caches the inventory so that one GUI instance retains
@@ -159,7 +159,7 @@ abstract class GUI {
         val event: InventoryClickEvent,
         val clickType: ClickType = event.click,
         val meta: ItemMeta? = item.itemMeta,
-        val locname: String? = meta?.localizedName?.ifEmpty { null },
+        val identifier: String? = meta?.getIdentifier()?.ifEmpty { null },
         val pdc: PersistentDataContainer? = meta?.persistentDataContainer
     )
 
@@ -263,7 +263,7 @@ abstract class GUI {
         val old = getItem(slot)
         setItem(slot, item)
         temporaryTasks.add(Bukkit.getScheduler().runTaskLater(Foundations.plugin, Runnable {
-            if( this.viewers.size == 0 ) return@Runnable
+            if(this.viewers.isEmpty()) return@Runnable
             setItem(slot, old)
         }, ticks.toLong()))
     }
@@ -284,7 +284,7 @@ abstract class GUI {
     // Cached objects
     companion object {
         val AIR = ItemStack(Material.AIR)
-        val RETURN = ItemBuilder(Material.BARRIER).name("&c&lBACK").locname("return").build()
+        val RETURN = ItemBuilder(Material.BARRIER).name("&c&lBACK").identifier("return").build()
 
         private var navigating = HashSet<UUID>()
     }

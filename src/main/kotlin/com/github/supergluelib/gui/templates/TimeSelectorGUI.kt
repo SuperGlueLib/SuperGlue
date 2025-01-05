@@ -53,14 +53,14 @@ class TimeSelectorGUI(val withTime: (Pair<Int, TimeUnit>) -> Unit): GUI() {
             fillEmpty(Panes.BLACK)
         }
         private companion object {
-            val SECONDS = ItemBuilder(Material.CLOCK, "&6Seconds").locname("SECONDS").build()
-            val MINUTES = ItemBuilder(Material.CLOCK, "&6Minutes").locname("MINUTES").build()
-            val HOURS = ItemBuilder(Material.CLOCK, "&6Hours").locname("HOURS").build()
-            val DAYS = ItemBuilder(Material.CLOCK, "&6Days").locname("DAYS").build()
+            val SECONDS = ItemBuilder(Material.CLOCK, "&6Seconds").identifier("SECONDS").build()
+            val MINUTES = ItemBuilder(Material.CLOCK, "&6Minutes").identifier("MINUTES").build()
+            val HOURS = ItemBuilder(Material.CLOCK, "&6Hours").identifier("HOURS").build()
+            val DAYS = ItemBuilder(Material.CLOCK, "&6Days").identifier("DAYS").build()
         }
 
         override fun onClick(click: ClickData) {
-            val unit = click.locname?.let(TimeUnit::valueOf) ?: return
+            val unit = click.identifier?.let(TimeUnit::valueOf) ?: return
             selector.timeunit = unit
             if (selector.isComplete) selector.invalidateInventoryCache() // Update title if necessary
             selector.open(click.player)
