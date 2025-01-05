@@ -21,6 +21,10 @@ dependencies {
     api("com.github.Revxrsal.Lamp:common:3.1.5")
     api("com.github.Revxrsal.Lamp:bukkit:3.1.5")
     api("com.github.Revxrsal.Lamp:brigadier:3.1.5")
+
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
+        exclude("org.bukkit")
+    }
 }
 
 kotlin {
