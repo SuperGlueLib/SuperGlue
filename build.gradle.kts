@@ -5,7 +5,7 @@ plugins {
 
 val groupName = "com.github.supergluelib"
 val artifactName = "SuperGlue"
-val libraryVersion = "1.2.0"
+val libraryVersion = "1.2.1"
 group = groupName
 version = libraryVersion
 
