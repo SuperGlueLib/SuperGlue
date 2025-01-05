@@ -14,6 +14,7 @@ import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.ItemMeta
 import java.io.File
 import java.lang.reflect.Type
 
@@ -27,7 +28,7 @@ import java.lang.reflect.Type
 abstract class CustomBlock<T>(val blockDataClass: Type, val defaultData: () -> T): CustomItem() {
     final override fun onRightClickBlock(player: Player, block: Block, item: ItemStack, event: PlayerInteractEvent) {} // Prevent overriding conflicting method
     final override fun getItem() = getItem(defaultData.invoke()) // Make sure Item is always supplied with data
-    final override fun fromItemStack(item: ItemStack) = this
+    final override fun fromItemStack(item: ItemStack, meta: ItemMeta, id: String?) = this
 
     private val file = File(Foundations.plugin.dataFolder, "blocks/${this::class.java.simpleName}.json").ensureExists()
     private val mapType = object: TypeToken<HashMap<String, HashMap<BlockPos, T>>>() {}.rawType
