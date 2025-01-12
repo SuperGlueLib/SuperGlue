@@ -4,6 +4,7 @@ import com.github.supergluelib.command.LampManager.handler
 import com.github.supergluelib.command.annotations.NotFullInventory
 import com.github.supergluelib.command.annotations.NotSelf
 import com.github.supergluelib.foundation.Foundations
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import revxrsal.commands.Lamp
 import revxrsal.commands.bukkit.BukkitLamp
@@ -26,7 +27,7 @@ object LampManager {
     fun create(init: (Lamp.Builder<BukkitCommandActor>) -> Unit): Lamp<BukkitCommandActor> {
         this.handler = BukkitLamp
             .builder(plugin)
-            .registerParameterValidators()
+            .registerSuperGlueDefaults()
             .apply(init)
             .build()
 
@@ -62,7 +63,7 @@ object LampManager {
         if (param.annotations().contains(annotationClass) && !condition.invoke(actor, param, value)) throw CommandErrorException(errorMessage)
     }
 
-    private fun Lamp.Builder<BukkitCommandActor>.registerParameterValidators(): Lamp.Builder<BukkitCommandActor> {
+    private fun Lamp.Builder<BukkitCommandActor>.registerSuperGlueDefaults(): Lamp.Builder<BukkitCommandActor> {
         registerParameterValidator(Player::class.java, NotSelf::class.java, "You cannot specify yourself") {
               actor, _, player -> actor.uniqueId() != player.uniqueId
         }
@@ -71,8 +72,11 @@ object LampManager {
             _, _, target -> target.inventory.firstEmpty() != -1
         }
 
+        suggestionProviders { providers ->
+            providers.addProvider(Player::class.java) { _ -> Bukkit.getOnlinePlayers().map { it.name } }
+        }
+
         return this
     }
-
 
 }
