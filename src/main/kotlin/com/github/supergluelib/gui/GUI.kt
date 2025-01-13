@@ -230,7 +230,7 @@ abstract class GUI {
      * @param item the item to put in the slot
      * @param gui the gui to take the player too
      */
-    protected fun Inventory.setGUIButton(slot: Int, item: ItemBuilder, gui: ClickData.() -> GUI) = setGUIButton(slot, item.build(), gui)
+    protected fun Inventory.setGUIButton(slot: Int, item: ItemBuilder, gui: (ClickData) -> GUI) = setGUIButton(slot, item.build(), gui)
 
     /**
      * Creates and places a GUI Button, otherwise known as a navigation button.
@@ -239,7 +239,7 @@ abstract class GUI {
      * @param item the item to put in the slot
      * @param gui the gui to take the player too
      */
-    protected fun Inventory.setGUIButton(slot: Int, item: ItemStack, gui: ClickData.() -> GUI) = setButton(slot, item) { gui.invoke(this).open(player) }
+    protected fun Inventory.setGUIButton(slot: Int, item: ItemStack, gui: (ClickData) -> GUI) = setButton(slot, item) { gui.invoke(this).open(player) }
 
     /**
      * Create a new GUI class on the spot!
