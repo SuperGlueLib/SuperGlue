@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.persistence.PersistentDataType
+import java.net.URL
 import java.util.*
 
 /**
@@ -37,6 +38,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     var leathercolor: Color? = null
 
     var skullowner: UUID? = null
+    var skullURLTexture: String? = null // This is the B64
 
     fun name(name: String) = apply { this.name = name; }
     fun lore(lines: List<String>) = apply { this.lore = ArrayList(lines) }
@@ -57,6 +59,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     fun hideDye(hide: Boolean) = apply { hideDye = hide }
 
     fun skullOwner(player: UUID) = apply { skullowner = player }
+    fun skullURLTexture(urlTail: String) = apply { skullURLTexture = urlTail }
 
     fun build(): ItemStack {
         val stack = ItemStack(type, amount ?: 1)
@@ -80,6 +83,12 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
 
         if (meta is SkullMeta){
             skullowner?.let { meta.setOwningPlayer(Bukkit.getOfflinePlayer(it)) }
+            skullURLTexture?.runCatching { // Prioritise URL Texture if it is set.
+                val profile = Bukkit.createPlayerProfile(UUID.randomUUID())
+                profile.textures.skin = URL("http://textures.minecraft.net/texture/$skullURLTexture")
+                meta.ownerProfile = profile
+            }?.getOrNull()
+
         }
 
         stack.itemMeta = meta
