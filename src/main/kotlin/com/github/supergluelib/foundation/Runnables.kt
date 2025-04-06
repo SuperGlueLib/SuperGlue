@@ -3,6 +3,11 @@ package com.github.supergluelib.foundation
 import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
 
+/**Run the code asynchronously */
+fun async(code: () -> Unit) = Runnables.async(code)
+/** Run the code in the next tick */
+fun runNextTick(code: () -> Unit) = Runnables.runNextTick(code)
+
 /**
  * A class implementing regular bukkit runnables but designed to be kotlin-friendly.
  */
