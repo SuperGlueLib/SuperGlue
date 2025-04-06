@@ -34,6 +34,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     var hideDye: Boolean? = null
     var unbreakable: Boolean? = null
     var glowing: Boolean? = null
+    var customModelData: Int? = null
 
     var leathercolor: Color? = null
 
@@ -50,6 +51,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     fun identifier(id: String) = apply { this.identifier = id }
     fun addPersistentInt(key: NamespacedKey, data: Int) = apply { if (persistentInts == null) persistentInts = hashMapOf(key to data) else persistentInts!![key] = data }
     fun addPersistentString(key: NamespacedKey, data: String) = apply { if (persistentStrings == null) persistentStrings = hashMapOf(key to data) else persistentStrings!![key] = data }
+    fun customModelData(model: Int) = apply { customModelData = model }
 
     fun hex(use: Boolean) = apply { useHex = use }
     fun unbreakable(unbreakable: Boolean) = apply { this.unbreakable = unbreakable }
@@ -68,6 +70,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
         if (lore != null) meta.lore = lore!!.map { it.toColor(useHex ?: false) }
         identifier?.let { meta.setIdentifier(identifier!!) }
         unbreakable?.let(meta::setUnbreakable)
+        customModelData?.let(meta::setCustomModelData)
         if (persistentInts?.isNotEmpty() == true)
             persistentInts!!.entries.forEach { meta.persistentDataContainer[it.key, PersistentDataType.INTEGER] = it.value }
         if (persistentStrings?.isNotEmpty() == true)
@@ -108,6 +111,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
         }
         apply { this@ItemBuilder.useHex = hex }
         if (meta.isUnbreakable) unbreakable(true)
+        if (meta.hasCustomModelData()) customModelData(meta.customModelData)
         if (meta.enchants.containsKey(Enchantment.OXYGEN) && meta.enchants[Enchantment.OXYGEN] == 1 && meta.hasItemFlag(ItemFlag.HIDE_ENCHANTS)) glowing(true)
         if (meta is LeatherArmorMeta) {
             leathercolor(meta.color)
