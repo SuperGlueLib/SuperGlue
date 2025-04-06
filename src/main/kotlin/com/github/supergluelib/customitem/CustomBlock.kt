@@ -77,6 +77,12 @@ abstract class CustomBlock<T>(val blockDataClass: Type, val defaultData: () -> T
         dataStore.getOrPut(block.world.name, ::hashMapOf)[block.blockPos] = data
     }
 
+    /** Updates the block data for any given block and then saves the data to file automatically. */
+    fun updateBlockData(block: Block, data: T, asyncSave: Boolean = true) {
+        addBlockData(block, data)
+        saveFile(asyncSave)
+    }
+
     // Abstract methods required for implementation
 
     abstract fun getItem(data: T): ItemStack
