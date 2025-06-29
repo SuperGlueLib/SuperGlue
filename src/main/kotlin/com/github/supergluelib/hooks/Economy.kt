@@ -10,7 +10,7 @@ import java.util.UUID
 class Economy internal constructor(): Hooks.Hook {
 
     private val _eco: Economy?
-    private val eco get() = _eco ?: throw IllegalStateException("Vault is required to use Economy!")
+    private val eco get() = _eco ?: throw IllegalStateException("Vault and a valid Economy provider are required to use Economy Functions!")
 
 
     init {
