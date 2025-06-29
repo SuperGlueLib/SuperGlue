@@ -31,8 +31,8 @@ abstract class CustomBlock<T>(val blockDataClass: Type, val defaultData: () -> T
     final override fun fromItemStack(item: ItemStack, meta: ItemMeta, id: String?) = this
 
     private val file = File(Foundations.plugin.dataFolder, "blocks/${this::class.java.simpleName}.json").ensureExists()
-    private val mapType = object: TypeToken<HashMap<String, HashMap<BlockPos, T>>>() {}.rawType
-    private val nestedMapType = object: TypeToken<HashMap<BlockPos, T>>() {}.rawType
+    private val nestedMapType = TypeToken.getParameterized(HashMap::class.java, BlockPos::class.java, blockDataClass).type
+    private val mapType = TypeToken.getParameterized(HashMap::class.java, String::class.java, nestedMapType).rawType
     private val blockPosAdapter = Gson().newBuilder().registerCustomTypeAdapter(BlockPosArrayGsonAdapter()).create()
     private val gson = Gson()
         .newBuilder()
