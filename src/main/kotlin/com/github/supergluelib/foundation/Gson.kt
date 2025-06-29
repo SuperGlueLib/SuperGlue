@@ -121,7 +121,8 @@ class NestedMapGsonAdapter<K, V, O>(val firstKeyType: Class<K>, val secondKeyTyp
          ]
 
      */
-    private val type = object: TypeToken<Map<K, Map<V, O>>>() {}.rawType
+//    private val type = object: TypeToken<Map<K, Map<V, O>>>() {}.rawType
+    private val type = TypeToken.getParameterized(Map::class.java, firstKeyType, TypeToken.getParameterized(Map::class.java, secondKeyType, valType).type).rawType
     override fun register(gson: GsonBuilder) = gson.registerTypeHierarchyAdapter(type, this)
 
     override fun writeOut(value: Map<K, Map<V, O>>, writer: JsonWriter) {
