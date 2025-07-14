@@ -2,6 +2,7 @@ package com.github.supergluelib.foundation.util
 
 import com.github.supergluelib.customitem.SuperItems.getIdentifier
 import com.github.supergluelib.customitem.SuperItems.setIdentifier
+import com.github.supergluelib.foundation.Foundations
 import com.github.supergluelib.foundation.extensions.toColor
 import com.github.supergluelib.foundation.extensions.toHashMap
 import org.bukkit.Bukkit
@@ -36,6 +37,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     var glowing: Boolean? = null
     var customModelData: Int? = null
     var customModelDataStrings: List<String>? = null
+    var itemModel: NamespacedKey? = null
 
     var leathercolor: Color? = null
 
@@ -54,6 +56,9 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     fun addPersistentString(key: NamespacedKey, data: String) = apply { if (persistentStrings == null) persistentStrings = hashMapOf(key to data) else persistentStrings!![key] = data }
     fun customModelData(model: Int) = apply { customModelData = model }
     fun customModelData(vararg model: String) = apply { customModelDataStrings = model.toList() }
+    fun itemModel(model: NamespacedKey) = apply { itemModel = model }
+    /** Automatically constructs NamespacedKey from your plugin instance */
+    fun itemModel(itemName: String) = apply { itemModel = NamespacedKey(Foundations.plugin, itemName) }
 
     fun hex(use: Boolean) = apply { useHex = use }
     fun unbreakable(unbreakable: Boolean) = apply { this.unbreakable = unbreakable }
@@ -72,6 +77,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
         if (lore != null) meta.lore = lore!!.map { it.toColor(useHex ?: false) }
         identifier?.let { meta.setIdentifier(identifier!!) }
         unbreakable?.let(meta::setUnbreakable)
+        itemModel?.let(meta::setItemModel)
         customModelData?.let(meta::setCustomModelData)
         customModelDataStrings?.let {
             val comp = meta.customModelDataComponent
