@@ -35,6 +35,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     var unbreakable: Boolean? = null
     var glowing: Boolean? = null
     var customModelData: Int? = null
+    var customModelDataStrings: List<String>? = null
 
     var leathercolor: Color? = null
 
@@ -52,6 +53,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     fun addPersistentInt(key: NamespacedKey, data: Int) = apply { if (persistentInts == null) persistentInts = hashMapOf(key to data) else persistentInts!![key] = data }
     fun addPersistentString(key: NamespacedKey, data: String) = apply { if (persistentStrings == null) persistentStrings = hashMapOf(key to data) else persistentStrings!![key] = data }
     fun customModelData(model: Int) = apply { customModelData = model }
+    fun customModelData(vararg model: String) = apply { customModelDataStrings = model.toList() }
 
     fun hex(use: Boolean) = apply { useHex = use }
     fun unbreakable(unbreakable: Boolean) = apply { this.unbreakable = unbreakable }
@@ -71,6 +73,11 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
         identifier?.let { meta.setIdentifier(identifier!!) }
         unbreakable?.let(meta::setUnbreakable)
         customModelData?.let(meta::setCustomModelData)
+        customModelDataStrings?.let {
+            val comp = meta.customModelDataComponent
+            comp.strings = it
+            meta.setCustomModelDataComponent(comp)
+        }
         if (persistentInts?.isNotEmpty() == true)
             persistentInts!!.entries.forEach { meta.persistentDataContainer[it.key, PersistentDataType.INTEGER] = it.value }
         if (persistentStrings?.isNotEmpty() == true)
