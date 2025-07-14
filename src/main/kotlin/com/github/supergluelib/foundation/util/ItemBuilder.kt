@@ -77,7 +77,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
             persistentStrings!!.entries.forEach { meta.persistentDataContainer[it.key, PersistentDataType.STRING] = it.value }
         if (enchants?.isNotEmpty() == true) enchants!!.forEach { (enchant, level) -> meta.addEnchant(enchant, level, true) }
         if (hideEnchants == true || (enchants?.isEmpty() == true && glowing == true)) meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
-        if (glowing == true && enchants?.isEmpty() == true) meta.addEnchant(Enchantment.OXYGEN, 1, false)
+        if (glowing == true && enchants?.isEmpty() != false) meta.setEnchantmentGlintOverride(true)
 
         if (meta is LeatherArmorMeta) {
             leathercolor?.let { meta.setColor(it) }
@@ -112,7 +112,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
         apply { this@ItemBuilder.useHex = hex }
         if (meta.isUnbreakable) unbreakable(true)
         if (meta.hasCustomModelData()) customModelData(meta.customModelData)
-        if (meta.enchants.containsKey(Enchantment.OXYGEN) && meta.enchants[Enchantment.OXYGEN] == 1 && meta.hasItemFlag(ItemFlag.HIDE_ENCHANTS)) glowing(true)
+        if (meta.enchantmentGlintOverride) glowing(true)
         if (meta is LeatherArmorMeta) {
             leathercolor(meta.color)
             if (meta.hasItemFlag(ItemFlag.HIDE_DYE)) hideDye(true)
