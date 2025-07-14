@@ -5,7 +5,7 @@ plugins {
 
 val groupName = "com.github.supergluelib"
 val artifactName = "SuperGlue"
-val libraryVersion = "1.2.6"
+val libraryVersion = "1.2.8"
 group = groupName
 version = libraryVersion
 
@@ -18,7 +18,7 @@ repositories {
 val lampVersion = "4.0.0-rc.2"
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT")
 
     api("io.github.revxrsal:lamp.common:$lampVersion")
     api("io.github.revxrsal:lamp.bukkit:$lampVersion")
