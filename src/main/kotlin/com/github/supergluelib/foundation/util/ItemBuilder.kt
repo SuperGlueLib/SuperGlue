@@ -12,6 +12,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.persistence.PersistentDataType
@@ -24,6 +25,24 @@ import java.util.*
 
 class ItemBuilder(private var type: Material, Name: String? = null, private var amount: Int? = null) {
     constructor(type: Material, amount: Int?): this(type, null, amount)
+
+    companion object {
+        private val processingSteps = mutableListOf<(ItemMeta, ItemBuilder) -> Unit>()
+
+        /**
+         * - This method allows you to register global ItemBuilder functionality within the build() function.
+         * - This is encouraged to be used in tandem with extension functions and [ItemBuilder.properties] to achieve fully integrated functionality.
+         * - Processing occurs *after* default properties have been applied allowing you to override existing properties.
+         * - Modify the ItemMeta object directly.
+         */
+        fun registerProcessStep(processing: (ItemMeta, ItemBuilder) -> Unit) {
+            processingSteps.add(processing)
+        }
+
+        /** @see registerProcessStep */
+        fun Foundations.registerItemBuilderProcess(process: (ItemMeta, ItemBuilder) -> Unit) = registerProcessStep(process)
+    }
+
     var name: String? = Name
     var lore: ArrayList<String>? = null
     var identifier: String? = null
@@ -43,6 +62,14 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
 
     var skullowner: UUID? = null
     var skullURLTexture: String? = null // This is the B64
+
+    /**
+     * This variable is used to add custom functionality to the Item Builder, for example, via extension functions which set custom properties
+     * and then use the process registry (via [Foundations.registerItemBuilderProcess] or [registerProcessStep]) to handle their implementation.
+     *
+     * properties are specific to this item builder instance and can be anything, they can be set or accessed at any time.
+     */
+    val properties: MutableMap<String, Any> = mutableMapOf()
 
     fun name(name: String) = apply { this.name = name; }
     fun lore(lines: List<String>) = apply { this.lore = ArrayList(lines) }
@@ -107,12 +134,16 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
 
         }
 
+        if (processingSteps.isNotEmpty()) {
+            processingSteps.forEach { step -> step.invoke(meta, this) }
+        }
+
         stack.itemMeta = meta
         return stack
     }
 
     constructor(item: ItemStack, hex: Boolean? = null): this(item.type, item.amount.takeIf { it != 1 }) {
-        val meta = item.itemMeta ?: return
+        val meta: ItemMeta = item.itemMeta ?: return
         if (meta.hasLore()) lore(meta.lore!!)
         if (meta.getIdentifier() != null) identifier(meta.getIdentifier()!!)
         if (meta.hasEnchants()) enchants(meta.enchants)
