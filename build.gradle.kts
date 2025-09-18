@@ -1,11 +1,11 @@
 plugins {
-    kotlin("jvm") version "1.9.0"
+    kotlin("jvm") version "2.2.20"
     `maven-publish`
 }
 
 val groupName = "com.github.supergluelib"
 val artifactName = "SuperGlue"
-val libraryVersion = "1.2.8"
+val libraryVersion = "1.2.9"
 group = groupName
 version = libraryVersion
 
@@ -29,8 +29,12 @@ dependencies {
     }
 }
 
+java {
+    withSourcesJar()
+}
+
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 publishing.publications.create<MavenPublication>("maven") {
