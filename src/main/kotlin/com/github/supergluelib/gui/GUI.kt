@@ -164,7 +164,7 @@ abstract class GUI: GUIExtensions {
     )
 
     // Utility methods
-    fun createInventory(name: String, size: Int, display: Inventory.() -> Unit) = Bukkit.createInventory(null, size, name.toColor()).apply(display)
+    fun createInventory(name: String, size: Int, display: SGInventory.() -> Unit) = SGInventory(Bukkit.createInventory(null, size, name.toColor())).apply(display)
     fun easyGUI(name: String, size: Int, inventory: Inventory.() -> Unit) = object: GUI() {
         override fun generateInventory(): Inventory {
             return createInventory(name, size, inventory)

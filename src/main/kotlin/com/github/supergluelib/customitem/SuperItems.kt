@@ -15,7 +15,7 @@ object SuperItems {
     private var setup: Boolean = false
     internal fun setup(plugin: JavaPlugin) {
         setup = true
-        plugin.registerListeners( ItemListener() )
+        plugin.registerListeners(ItemListener())
         idKey = NamespacedKey(plugin, "superglue-id")
     }
 

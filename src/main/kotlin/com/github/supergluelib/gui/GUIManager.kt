@@ -43,7 +43,7 @@ object GUIManager: Listener {
     }
 
     @EventHandler
-    fun onClose(event: InventoryCloseEvent){
+    fun onClose(event: InventoryCloseEvent) {
         getGUI(event.player)?.onClose(event.player as Player)
     }
 
