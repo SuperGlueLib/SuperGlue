@@ -269,14 +269,27 @@ abstract class GUI: GUIExtensions {
         }, ticks.toLong()))
     }
 
+
+
     /**
      * When clicked, connects the player to the proxy server named [serverName]
      *
      * @param slot the slot to put the item in
-     * @param item the item to set the slot to
      * @param serverName the name of the server to connect the player to
+     * @param item the item to set the slot to
      */
-    protected fun Inventory.setServerConnectionButton(slot: Int, item: ItemStack, serverName: String): Button {
+    protected fun Inventory.setServerConnectionButton(slot: Int, serverName: String, item: () -> ItemStack): Button {
+        return setServerConnectionButton(slot, serverName, item.invoke())
+    }
+
+    /**
+     * When clicked, connects the player to the proxy server named [serverName]
+     *
+     * @param slot the slot to put the item in
+     * @param serverName the name of the server to connect the player to
+     * @param item the item to set the slot to
+     */
+    protected fun Inventory.setServerConnectionButton(slot: Int, serverName: String, item: ItemStack): Button {
         return setButton(slot, item) {
             player.connectToBungeeServer(serverName)
         }
