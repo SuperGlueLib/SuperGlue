@@ -6,6 +6,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 object PluginMessager {
+
     init {
         Bukkit.getMessenger().registerOutgoingPluginChannel(Foundations.plugin, "BungeeCord")
     }

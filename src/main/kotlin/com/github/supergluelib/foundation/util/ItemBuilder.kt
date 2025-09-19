@@ -151,7 +151,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
             persistentStrings!!.entries.forEach { meta.persistentDataContainer[it.key, PersistentDataType.STRING] = it.value }
         if (enchants?.isNotEmpty() == true) enchants!!.forEach { (enchant, level) -> meta.addEnchant(enchant, level, true) }
         if (hideEnchants == true || (enchants?.isEmpty() == true && glowing == true)) meta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
-        if (glowing == true && enchants?.isEmpty() != false) meta.setEnchantmentGlintOverride(true)
+        if (glowing == true && (enchants == null || enchants!!.isEmpty())) meta.setEnchantmentGlintOverride(true)
 
         if (meta is LeatherArmorMeta) {
             leathercolor?.let { meta.setColor(it) }

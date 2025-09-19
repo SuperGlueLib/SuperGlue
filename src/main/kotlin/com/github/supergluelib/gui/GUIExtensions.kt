@@ -6,6 +6,9 @@ import org.bukkit.inventory.ItemStack
 
 interface GUIExtensions {
 
+    /** @return the slot number based on the given row and column using a 1-index (1-9) */
+    fun slot(row: Int, column: Int): Int = 9*(row-1) + column - 1
+
     /** @return true if the inventory has no empty slots */
     fun Inventory.isFull() = firstEmpty() == -1
 
