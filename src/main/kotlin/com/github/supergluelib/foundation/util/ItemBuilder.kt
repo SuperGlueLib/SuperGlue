@@ -48,6 +48,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
 
     var actions: ActionsModule? = null
 
+//    @JvmField -- Explore this?
     var name: String? = Name
     var lore: ArrayList<String>? = null
     var identifier: String? = null

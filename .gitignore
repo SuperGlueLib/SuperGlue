@@ -2,7 +2,6 @@
 build/
 .idea/
 
-old builds.rar
+other/
 
 
-src/**/ItemBuilderTest.kt
