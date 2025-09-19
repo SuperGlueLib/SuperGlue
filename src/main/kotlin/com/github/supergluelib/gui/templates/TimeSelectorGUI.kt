@@ -7,13 +7,13 @@ import com.github.supergluelib.foundation.util.ItemBuilder
 import com.github.supergluelib.gui.GUI
 import com.github.supergluelib.gui.GUIManager
 import com.github.supergluelib.gui.Panes
-import com.github.supergluelib.gui.fillEmpty
 import org.bukkit.Material
 import java.util.concurrent.TimeUnit
 
 class TimeSelectorGUI(val withTime: (Pair<Int, TimeUnit>) -> Unit): GUI() {
     var amount: Int? = null
     var timeunit: TimeUnit? = null
+
 
     inline val isComplete get() = amount != null && timeunit != null
     private val titleExtension get() = if (isComplete) " ($amount $timeunit)" else ""

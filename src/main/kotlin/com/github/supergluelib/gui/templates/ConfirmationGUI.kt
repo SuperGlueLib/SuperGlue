@@ -4,7 +4,6 @@ import com.github.supergluelib.foundation.extensions.toColor
 import com.github.supergluelib.foundation.util.ItemBuilder
 import com.github.supergluelib.gui.GUI
 import com.github.supergluelib.gui.Panes
-import com.github.supergluelib.gui.setColumns
 import com.github.supergluelib.gui.types.CloseEvent
 import org.bukkit.Material
 import org.bukkit.entity.Player

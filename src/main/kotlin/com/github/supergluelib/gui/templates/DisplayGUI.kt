@@ -2,8 +2,6 @@ package com.github.supergluelib.gui.templates
 
 import com.github.supergluelib.gui.GUI
 import com.github.supergluelib.gui.Panes
-import com.github.supergluelib.gui.fillEmpty
-import com.github.supergluelib.gui.setNextAvailableSlots
 import org.bukkit.inventory.ItemStack
 
 /**

@@ -35,7 +35,7 @@ setLiveButton -- Polls the function every second until the inventory is closed.
 ---- PAGE SUPPORT ----
  */
 
-abstract class GUI {
+abstract class GUI: GUIExtensions {
     private var inventory: Inventory? = null
 
     private var backslot: Int? = null
