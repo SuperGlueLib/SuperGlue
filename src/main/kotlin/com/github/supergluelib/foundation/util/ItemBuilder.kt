@@ -47,6 +47,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     // TODO: Potions & Skulls submodules as well? && Ensure support for Actions instance reuse
 
     var actions: ActionsModule? = null
+
     var name: String? = Name
     var lore: ArrayList<String>? = null
     var identifier: String? = null
@@ -61,6 +62,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     var customModelData: Int? = null
     var customModelDataStrings: List<String>? = null
     var itemModel: NamespacedKey? = null
+    var hideToolTip: Boolean? = null
 
     var leathercolor: Color? = null
 
@@ -91,6 +93,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     fun itemModel(model: NamespacedKey) = apply { itemModel = model }
     /** Automatically constructs NamespacedKey from your plugin instance */
     fun itemModel(itemName: String) = apply { itemModel = NamespacedKey(Foundations.plugin, itemName) }
+    fun hideToolTip(hide: Boolean = true) = apply { this.hideToolTip = hide }
 
     fun hex(use: Boolean) = apply { useHex = use }
     fun unbreakable(unbreakable: Boolean) = apply { this.unbreakable = unbreakable }
