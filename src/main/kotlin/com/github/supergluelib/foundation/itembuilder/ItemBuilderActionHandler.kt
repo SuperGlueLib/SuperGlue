@@ -2,7 +2,6 @@ package com.github.supergluelib.foundation.itembuilder
 
 import com.github.supergluelib.customitem.CustomItem
 import com.github.supergluelib.customitem.SuperItems.getIdentifier
-import com.github.supergluelib.foundation.util.ItemBuilder
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.inventory.ItemStack
@@ -11,7 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta
 internal class ItemBuilderActionHandler: CustomItem() {
 
     internal companion object {
-        val actionMap = mutableMapOf<String, ItemBuilder.Actions>()
+        val actionMap = mutableMapOf<String, ActionsModule>()
     }
 
     override fun getItem(): Nothing = throw IllegalArgumentException("Cannot generate this item")

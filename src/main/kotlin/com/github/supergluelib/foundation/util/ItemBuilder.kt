@@ -1,19 +1,17 @@
 package com.github.supergluelib.foundation.util
 
-import com.github.supergluelib.customitem.SuperItems
 import com.github.supergluelib.customitem.SuperItems.getIdentifier
 import com.github.supergluelib.customitem.SuperItems.setIdentifier
 import com.github.supergluelib.foundation.Foundations
 import com.github.supergluelib.foundation.extensions.toColor
 import com.github.supergluelib.foundation.extensions.toHashMap
-import com.github.supergluelib.foundation.itembuilder.ItemBuilderActionHandler
-import com.github.supergluelib.gui.GUI
+import com.github.supergluelib.foundation.itembuilder.ActionsModule
+import com.github.supergluelib.foundation.util.ItemBuilder.Companion.registerProcessingStep
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.enchantments.Enchantment
-import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
@@ -21,9 +19,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.persistence.PersistentDataType
 import java.net.URL
-import java.util.ArrayList
-import java.util.HashMap
-import java.util.UUID
+import java.util.*
 
 /**
  * A kotlin friendly class optimising and shortening the creation of custom itemstacks.
@@ -41,36 +37,16 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
          * - Processing occurs *after* default properties have been applied allowing you to override existing properties.
          * - Modify the ItemMeta object directly.
          */
-        fun registerProcessStep(processing: (ItemMeta, ItemBuilder) -> Unit) {
-            processingSteps.add(processing)
-        }
+        fun registerProcessingStep(processing: (ItemMeta, ItemBuilder) -> Unit) { processingSteps.add(processing) }
 
-        /** @see registerProcessStep */
-        fun Foundations.registerItemBuilderProcess(process: (ItemMeta, ItemBuilder) -> Unit) = registerProcessStep(process)
 
-        private var registeredActions = false
+        /** @see registerProcessingStep */
+        fun Foundations.registerItemBuilderProcess(process: (ItemMeta, ItemBuilder) -> Unit) = registerProcessingStep(process)
     }
 
     // TODO: Potions & Skulls submodules as well? && Ensure support for Actions instance reuse
-    class Actions() {
-        var gui: GUI? = null
 
-        fun openGUI(gui: GUI) = apply { this.gui = gui }
-
-        internal fun register(id: String) {
-            if (!registeredActions) {
-                SuperItems.register(ItemBuilderActionHandler())
-                registeredActions = true
-            }
-            ItemBuilderActionHandler.actionMap[id] = this
-        }
-
-        internal fun action(player: Player) {
-            gui?.open(player)
-        }
-    }
-
-    var actions: Actions? = null
+    var actions: ActionsModule? = null
     var name: String? = Name
     var lore: ArrayList<String>? = null
     var identifier: String? = null
@@ -93,7 +69,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
 
     /**
      * This variable is used to add custom functionality to the Item Builder, for example, via extension functions which set custom properties
-     * and then use the process registry (via [Foundations.registerItemBuilderProcess] or [registerProcessStep]) to handle their implementation.
+     * and then use the process registry (via [Foundations.registerItemBuilderProcess] or [registerProcessingStep]) to handle their implementation.
      *
      * properties are specific to this item builder instance and can be anything, they can be set or accessed at any time.
      */
@@ -126,9 +102,9 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
     fun skullOwner(player: UUID) = apply { skullowner = player }
     fun skullURLTexture(urlTail: String) = apply { skullURLTexture = urlTail }
 
-    fun actions(identifier: String, actions: (Actions) -> Unit) = apply {
+    fun actions(identifier: String, actions: (ActionsModule) -> Unit) = apply {
         this.identifier(identifier)
-        this.actions = Actions().also(actions)
+        this.actions = ActionsModule().also(actions)
     }
 
     fun build(): ItemStack {
