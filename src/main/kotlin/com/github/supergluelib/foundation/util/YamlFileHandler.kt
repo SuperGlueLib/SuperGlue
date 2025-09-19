@@ -10,10 +10,12 @@ import java.io.File
  * Handles the setting up, saving and reloading of a YAML file.
  * - onReload is called when the class is loaded
  * - Variables created in the subclass must be lateinit as onReload() is called *before* sub-instantiation
+ * - I am hoping to fix this soon - maybe just make you call reload() in your init script.
  */
 abstract class YamlFileHandler(private val plugin: JavaPlugin, val name: String, resource: Boolean = false) {
     val file: File = File(plugin.dataFolder, name)
     var config: FileConfiguration
+    private var loaded = false
 
     init {
         if (!file.exists()){
@@ -31,6 +33,7 @@ abstract class YamlFileHandler(private val plugin: JavaPlugin, val name: String,
     fun reload() {
         config = file.loadYamlConfiguration()
         onReload()
+
     }
 
     fun save(async: Boolean = false) = Runnables.async(async) { config.save(file) }

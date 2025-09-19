@@ -20,12 +20,12 @@ object SuperItems {
     }
 
     fun register(vararg items: CustomItem) {
-        if (!setup) Bukkit.getLogger().warning("Make sure you have used Foundations.setup(plugin) before registering custom items")
+        if (!setup) Bukkit.getLogger().warning("Make sure you have used Foundations.setup(plugin) before registering custom items or using ItemBuilder actions")
         items.forEach(this::register)
     }
 
     fun unregister(vararg items: CustomItem) {
-        if (!setup) Bukkit.getLogger().warning("Make sure you have used Foundations.setup(plugin) before using custom items")
+        if (!setup) Bukkit.getLogger().warning("Make sure you have used Foundations.setup(plugin) before using custom items or using ItemBuilder actions")
         items.forEach(this::unregister)
     }
 

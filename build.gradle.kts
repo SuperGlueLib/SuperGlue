@@ -27,6 +27,8 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7") {
         exclude("org.bukkit")
     }
+
+    testCompileOnly("org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT")
 }
 
 java {
