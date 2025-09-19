@@ -1,7 +1,8 @@
-package com.github.supergluelib.foundation.util
+package com.github.supergluelib.foundation.itembuilder
 
 import com.github.supergluelib.customitem.CustomItem
 import com.github.supergluelib.customitem.SuperItems.getIdentifier
+import com.github.supergluelib.foundation.util.ItemBuilder
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.inventory.ItemStack
