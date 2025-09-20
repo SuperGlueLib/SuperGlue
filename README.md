@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.supergluelib:SuperGlue:1.2.8")
+    implementation("com.github.supergluelib:SuperGlue:1.3.1")
 }
 ```
 
