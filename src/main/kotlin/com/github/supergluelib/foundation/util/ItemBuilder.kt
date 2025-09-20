@@ -120,6 +120,7 @@ class ItemBuilder(private var type: Material, Name: String? = null, private var 
         unbreakable?.let(meta::setUnbreakable)
         itemModel?.let(meta::setItemModel)
         customModelData?.let(meta::setCustomModelData)
+        hideToolTip?.let(meta::setHideTooltip)
         customModelDataStrings?.let {
             val comp = meta.customModelDataComponent
             comp.strings = it
