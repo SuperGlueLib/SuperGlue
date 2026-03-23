@@ -6,9 +6,7 @@ plugins {
 
 val groupName = "com.github.supergluelib"
 val artifactName = "SuperGlue"
-val libraryVersion = "1.3.1"
 group = groupName
-version = libraryVersion
 
 repositories {
     mavenCentral()
@@ -43,6 +41,6 @@ kotlin {
 publishing.publications.create<MavenPublication>("maven") {
     groupId = groupName
     artifactId = artifactName
-    version = libraryVersion
+//    version = libraryVersion
     from(components["java"])
 }
