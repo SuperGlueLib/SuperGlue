@@ -1,25 +1,20 @@
 package com.github.supergluelib.foundation.database
 
 import java.io.File
-import java.sql.DriverManager
 
-/**
- * Handles an instance of a SQLite Database, Make sure to close it before the server shuts down.
- * Automatically intialises a connection when the class is created
- */
-class SQLiteDatabase(val file: File): AutoCloseable {
-    private val filePath = file.apply { parentFile.mkdirs() }.path
-    val connection = DriverManager.getConnection("jdbc:sqlite:$filePath")
-    // TODO: return auto generated keys with prepareStatement(string, int)
+abstract class SQLiteDatabase(private val path: String) {
+    val conn = SQLiteConnection(File(path))
 
-    // Convenience methods
-    fun prepareStatement(sql: String) = connection.prepareStatement(sql)
+    // TODO auto versioning schema & migrations
+    abstract fun createTables()
+    fun runMigrations() {}
 
-    // Connection Management
-    override fun close() {
-        connection.close()
+    open fun start() {
+        createTables()
+        runMigrations()
     }
 
-    /** @return a pair with this object to it's associated class object, useful for bypassing type erasure */
-    fun <T: Any> T.toClassPair() = this to this::class.java
+    open fun close() {
+        conn.close()
+    }
 }
