@@ -1,6 +1,7 @@
 package com.github.supergluelib.foundation.database
 
 import java.io.File
+import java.sql.Connection
 import java.sql.DriverManager
 
 /**
@@ -14,15 +15,7 @@ class SQLiteConnection(val file: File) {
 
     // Convenience methods
     fun prepareStatement(sql: String) = connection.prepareStatement(sql)
-
-    // Connection Management
-    fun close() {
-        connection.close()
-    }
-
-    /** @return a pair with this object to it's associated class object, useful for bypassing type erasure */
-    fun <T: Any> T.toClassPair() = this to this::class.java
-
+    fun executeOnce(sql: String) = connection.createStatement().execute(sql)
 
     // MIGRATIONS
     /*
