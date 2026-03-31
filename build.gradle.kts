@@ -10,6 +10,7 @@ group = groupName
 
 repositories {
     mavenCentral()
+    mavenLocal() // For DeYaml until I publish it officially.
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://www.jitpack.io")
 }
@@ -18,6 +19,8 @@ val lampVersion = "4.0.0-rc.2"
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT")
+
+    implementation("com.github.mlgpenguin:DeYaml:1.0.0")
 
     api("io.github.revxrsal:lamp.common:$lampVersion")
     api("io.github.revxrsal:lamp.bukkit:$lampVersion")
