@@ -8,6 +8,13 @@ object YAML {
 
     inline fun <reified T : Any> load(resourceName: String): T = Deyaml.load<T>(util.deser(resourceName))
 
+    inline fun <reified T : Any> loadOrCreate(resourceName: String, default: T): T = if (util.exists(resourceName)) {
+        load<T>(resourceName)
+    } else {
+        save(default, resourceName)
+        default
+    }
+
     fun <T: Any> save(obj: T, resourceName: String) = util.save(obj, resourceName)
 
 }

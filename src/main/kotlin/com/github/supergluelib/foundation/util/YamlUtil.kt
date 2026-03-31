@@ -9,6 +9,9 @@ class YamlUtil {
     val storage = SnakeYamlStorageLayer()
 
     fun file(resourceName: String): File = File(Foundations.plugin.dataFolder, resourceName)
+    fun exists(resourceName: String): Boolean = file(resourceName).exists()
     fun deser(resourceName: String): Map<String, Any> = storage.load(file(resourceName))
     fun <T: Any> save(obj: T, loc: String) = storage.save(Deyaml.deserialise(obj), file(loc))
+
+
 }
