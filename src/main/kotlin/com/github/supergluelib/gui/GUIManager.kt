@@ -17,7 +17,7 @@ import java.util.*
 object GUIManager: Listener {
     private val plugin get() = Foundations.plugin
 
-    internal fun setup(plugin: JavaPlugin) {
+    init {
         this.register(plugin)
     }
 

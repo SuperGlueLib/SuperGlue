@@ -4,7 +4,6 @@ import com.github.supergluelib.customitem.SuperItems
 import com.github.supergluelib.foundation.extensions.register
 import com.github.supergluelib.foundation.input.InputListener
 import com.github.supergluelib.foundation.misc.PluginMessager
-import com.github.supergluelib.gui.GUIManager
 import org.bukkit.plugin.java.JavaPlugin
 
 object Foundations {
@@ -23,7 +22,6 @@ object Foundations {
         this._plugin = plugin
         InputListener.register(plugin)
         SuperItems.setup(plugin)
-        GUIManager.setup(plugin)
         return this
     }
 
