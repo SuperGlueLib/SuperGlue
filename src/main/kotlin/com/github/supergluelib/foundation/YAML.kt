@@ -11,6 +11,7 @@ object YAML {
     inline fun <reified T : Any> loadOrCreate(resourceName: String, default: T): T = if (util.exists(resourceName)) {
         load<T>(resourceName)
     } else {
+        util.file(resourceName).createNewFile() // implicitly "if not exists"
         save(default, resourceName)
         default
     }

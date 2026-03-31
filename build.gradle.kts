@@ -20,7 +20,9 @@ val lampVersion = "4.0.0-rc.2"
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT")
 
-    implementation("com.github.mlgpenguin:DeYaml:1.0.0")
+    implementation("com.github.mlgpenguin:DeYaml:1.0.0") {
+        exclude(group = "org.yaml")
+    }
 
     api("io.github.revxrsal:lamp.common:$lampVersion")
     api("io.github.revxrsal:lamp.bukkit:$lampVersion")
