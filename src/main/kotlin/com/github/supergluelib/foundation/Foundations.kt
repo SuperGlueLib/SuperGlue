@@ -1,8 +1,5 @@
 package com.github.supergluelib.foundation
 
-import com.github.supergluelib.customitem.SuperItems
-import com.github.supergluelib.foundation.extensions.register
-import com.github.supergluelib.foundation.input.InputListener
 import com.github.supergluelib.foundation.misc.PluginMessager
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -20,8 +17,6 @@ object Foundations {
 
     fun setup(plugin: JavaPlugin): Foundations {
         this._plugin = plugin
-        InputListener.register(plugin)
-        SuperItems.setup(plugin)
         return this
     }
 

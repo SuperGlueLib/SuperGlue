@@ -11,7 +11,7 @@ object YAML {
     inline fun <reified T : Any> loadOrCreate(resourceName: String, default: T): T = if (util.exists(resourceName)) {
         load<T>(resourceName)
     } else {
-        Foundations.log("$resourceName not found, creating it.")
+        Foundations.log("Creating $resourceName automatically")
 
         // Create file and parent directories
         val file = util.file(resourceName)

@@ -2,30 +2,31 @@ package com.github.supergluelib.customitem
 
 import com.github.supergluelib.foundation.Foundations
 import com.github.supergluelib.foundation.extensions.registerListeners
-import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.block.Block
 import org.bukkit.entity.Projectile
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.persistence.PersistentDataType
-import org.bukkit.plugin.java.JavaPlugin
 
 object SuperItems {
-    private var setup: Boolean = false
-    internal fun setup(plugin: JavaPlugin) {
-        setup = true
-        plugin.registerListeners(ItemListener())
-        idKey = NamespacedKey(plugin, "superglue-id")
+
+    // New Item Identifier System
+    var idKey: NamespacedKey
+
+    init {
+        Foundations.plugin.registerListeners(ItemListener())
+        idKey = NamespacedKey(Foundations.plugin, "superglue-id")
     }
 
+    fun ItemMeta.setIdentifier(id: String) = persistentDataContainer.set(idKey, PersistentDataType.STRING, id)
+    fun ItemMeta.getIdentifier(): String? = persistentDataContainer.get(idKey, PersistentDataType.STRING)
+
     fun register(vararg items: CustomItem) {
-        if (!setup) Bukkit.getLogger().warning("Make sure you have used Foundations.setup(plugin) before registering custom items or using ItemBuilder actions")
         items.forEach(this::register)
     }
 
     fun unregister(vararg items: CustomItem) {
-        if (!setup) Bukkit.getLogger().warning("Make sure you have used Foundations.setup(plugin) before using custom items or using ItemBuilder actions")
         items.forEach(this::unregister)
     }
 
@@ -56,10 +57,5 @@ object SuperItems {
     }
 
     fun getByBlock(clazz: Class<out CustomBlock<*>>) = blocks[clazz]
-
-    // New Item Identifier System
-    lateinit var idKey: NamespacedKey
-    fun ItemMeta.setIdentifier(id: String) = persistentDataContainer.set(idKey, PersistentDataType.STRING, id)
-    fun ItemMeta.getIdentifier(): String? = persistentDataContainer.get(idKey, PersistentDataType.STRING)
 
 }
