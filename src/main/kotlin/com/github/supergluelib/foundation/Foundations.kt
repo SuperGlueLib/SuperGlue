@@ -25,6 +25,8 @@ object Foundations {
         return this
     }
 
+    fun log(info: String) = plugin.logger.info(info)
+
     fun usePluginMessaging(use: Boolean = true) {
         usingPluginMessaging = use
         if (use) PluginMessager // Init -> Register
