@@ -1,6 +1,5 @@
 package com.github.supergluelib.foundation
 
-import com.github.supergluelib.foundation.misc.PluginMessager
 import org.bukkit.plugin.java.JavaPlugin
 
 object Foundations {
@@ -13,7 +12,7 @@ object Foundations {
         else return _plugin!!
     }
 
-    private var usingPluginMessaging: Boolean = false
+    internal var disableHooks: MutableList<() -> Unit> = mutableListOf()
 
     fun setup(plugin: JavaPlugin): Foundations {
         this._plugin = plugin
@@ -22,13 +21,8 @@ object Foundations {
 
     fun log(info: String) = plugin.logger.info(info)
 
-    fun usePluginMessaging(use: Boolean = true) {
-        usingPluginMessaging = use
-        if (use) PluginMessager // Init -> Register
-    }
-
     fun onDisable() {
-        if (usingPluginMessaging) PluginMessager.disable()
+        disableHooks.forEach { it.invoke() }
     }
 }
 

@@ -9,6 +9,7 @@ object PluginMessager {
 
     init {
         Bukkit.getMessenger().registerOutgoingPluginChannel(Foundations.plugin, "BungeeCord")
+        Foundations.disableHooks.add(::disable)
     }
 
     /** Sends the player to the bungeecord server specified by [servername] or prints a warning to console if it is not found */
