@@ -1,5 +1,6 @@
 package com.github.supergluelib.foundation.database
 
+import com.github.supergluelib.foundation.Foundations
 import java.io.File
 import java.sql.DriverManager
 
@@ -9,10 +10,11 @@ import java.sql.DriverManager
  * - Nothing is executed until [start] is called
  * - Make sure to run [close] when closing your connection to the database or in your onDisable.
  */
-abstract class SQLiteDatabase(path: String) {
+abstract class SQLiteDatabase(name: String) {
 //    val conn = SQLiteConnection(File(path))
-    private val file = File(path).apply { parentFile.mkdirs() }
-    protected val connection = DriverManager.getConnection("jdbc:sqlite:$path")
+    private val parentFile = Foundations.plugin.dataFolder.apply { mkdirs() }
+    private val file = File(Foundations.plugin.dataFolder, name).apply { createNewFile() }
+    protected val connection = DriverManager.getConnection("jdbc:sqlite:${file.path}")
 
 
     // TODO auto versioning schema & migrations

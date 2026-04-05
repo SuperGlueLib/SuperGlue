@@ -31,7 +31,7 @@ class SQLiteConnection(val file: File) {
 
     // BATCH VS TRANSACTION
     // BATCH: Groups network requests (messages) to be sent from client -> database, so all 100 operations would be sent in one request (great if latency on the network)
-    // TRANSACTION: Changes the actual behaviour of the db, without it, a batch is still committed to disk on each OP, but with it, all 100 OPs are commited at once (great for sqlite because of disk IO)
+    // TRANSACTION: Changes the actual behaviour of the db, without it, a batch is still committed to disk on each OP, but with it, all 100 OPs are commited at once (great for sqlite because of disk IO) - They also fail together so if one fails, all fail.
     // Always use prepared statements - they're faster & protect against sql injection
     // INDEXES - USE THEM "EXPLAIN QUERY PLAN" TO SEE IF THEY'RE BEING USED CORRECTLY
     // N+1 QUERIES ISSUE: query minions table to get all IDs and then query another table 1 by 1 with each id to get data about said minion. USE A JOIN
